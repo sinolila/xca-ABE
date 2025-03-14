@@ -1,4 +1,3 @@
-
 list(APPEND xcadoc_sources arguments.cpp arguments.h xcadoc.cpp)
 list(APPEND xcaexport_sources pki_export.cpp pki_export.h xcaexport.cpp)
 
@@ -40,6 +39,7 @@ PwDialogCore.cpp	PwDialogCore.h		digest.h
 digest.cpp		pki_export.cpp		debug_info.h
 func_base.cpp		func_base.h		debug_info.cpp
 cmdline.cpp
+db_x509_stubs.cpp
 )
 
 macro(ExpandSources target)

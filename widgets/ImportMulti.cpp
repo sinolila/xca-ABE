@@ -277,11 +277,6 @@ void ImportMulti::showDetail(const QModelIndex &idx)
 void ImportMulti::showDetail(pki_base *pki)
 {
 	if (pki) try {
-		pki_x509super *pki_super = dynamic_cast<pki_x509super*>(pki);
-		if (pki_super) {
-			CertDetail::showCert(this, pki_super);
-			return;
-		}
 		pki_key *key = dynamic_cast<pki_key*>(pki);
 		if (key) {
 			KeyDetail::showKey(this, key);
@@ -290,11 +285,6 @@ void ImportMulti::showDetail(pki_base *pki)
 		pki_crl *crl = dynamic_cast<pki_crl*>(pki);
 		if (crl) {
 			CrlDetail::showCrl(this, crl);
-			return;
-		}
-		pki_temp *temp = dynamic_cast<pki_temp*>(pki);
-		if (temp) {
-			NewX509::showTemp(this, temp);
 			return;
 		}
 		XCA_WARN(tr("The type of the item '%1' is not recognized").

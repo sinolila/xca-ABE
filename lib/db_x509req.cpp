@@ -57,48 +57,6 @@ pki_base *db_x509req::insert(pki_base *item)
 	return insertPKI(req);
 }
 
-void db_x509req::newItem()
-{
-	newItem(NULL, NULL);
-}
-
-void db_x509req::newItem(pki_temp *temp, pki_x509req *orig)
-{
-	pki_x509req *req = NULL;
-	NewX509 *dlg = new NewX509();
-
-	if (temp) {
-		dlg->defineTemplate(temp);
-	} else if (orig) {
-		dlg->fromX509super(orig, true);
-	}
-	dlg->setRequest();
-	if (!dlg->exec()){
-		delete dlg;
-		return;
-	}
-	try {
-		pki_key *key = dlg->getSelectedKey();
-		x509name xn = dlg->getX509name();
-		req = new pki_x509req();
-		req->pkiSource = dlg->getPkiSource();
-
-		req->setIntName(dlg->description->text());
-
-		dlg->getReqAttributes(req);
-		req->createReq(key, xn, dlg->hashAlgo->current(),
-				dlg->getAllExt());
-		 // set the comment field
-		req->setComment(dlg->comment->toPlainText());
-
-		createSuccess(insert(req));
-	}
-	catch (errorEx &err) {
-		XCA_ERROR(err);
-		delete req;
-	}
-}
-
 void db_x509req::exportItem(const QModelIndex &index,
 		const pki_export *xport, XFile &file) const
 {

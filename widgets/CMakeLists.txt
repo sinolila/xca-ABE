@@ -1,32 +1,27 @@
 list(APPEND xca_sources
-CertDetail.cpp		NewCrl.cpp		XcaApplication.h
-CertDetail.h		NewCrl.h		XcaDialog.cpp
-CertExtend.cpp		NewKey.cpp		XcaDialog.h
-CertExtend.h		NewKey.h		XcaHeaderView.cpp
-CertTreeView.cpp	NewX509.cpp		XcaHeaderView.h
-CertTreeView.h		NewX509.h
-CrlDetail.cpp		NewX509_ext.cpp		XcaProxyModel.cpp
-CrlDetail.h		OidResolver.cpp		XcaProxyModel.h
-CrlTreeView.cpp		OidResolver.h		XcaTreeView.cpp
-CrlTreeView.h		OpenDb.cpp		XcaTreeView.h
-ExportDialog.cpp	OpenDb.h		XcaWarning.cpp
-ExportDialog.h		Options.cpp		XcaWarning.h
-FocusCombo.h		Options.h		clicklabel.cpp
-Help.cpp		PwDialog.cpp		clicklabel.h
-Help.h			PwDialog.h
-ImportMulti.cpp		ReqTreeView.cpp
-ImportMulti.h		ReqTreeView.h		distname.cpp
-ItemCombo.h		RevocationList.cpp	distname.h
-KeyDetail.cpp		RevocationList.h	hashBox.cpp
-KeyDetail.h		SearchPkcs11.cpp	hashBox.h
-KeyTreeView.cpp		SearchPkcs11.h		kvView.cpp
-KeyTreeView.h		TempTreeView.cpp	kvView.h
-MW_help.cpp		TempTreeView.h		v3ext.cpp
-MW_menu.cpp		X509SuperTreeView.cpp	v3ext.h
-MainWindow.cpp		X509SuperTreeView.h	validity.cpp
-MainWindow.h		XcaApplication.cpp	validity.h
-pkcs12EncBox.h          XcaDetail.h
-pkcs12EncBox.cpp        XcaDetail.cpp
+    KeyDetail.cpp		NewKey.cpp		XcaApplication.h
+    KeyDetail.h		NewKey.h		XcaDialog.cpp
+    KeyTreeView.cpp		XcaDialog.h		XcaHeaderView.cpp
+    KeyTreeView.h		XcaHeaderView.h
+    MW_help.cpp		XcaProxyModel.cpp
+    MW_menu.cpp		XcaProxyModel.h		XcaTreeView.cpp
+    MainWindow.cpp		XcaTreeView.h		XcaWarning.cpp
+    MainWindow.h		XcaWarning.h
+    ExportDialog.cpp	OpenDb.cpp		clicklabel.cpp
+    ExportDialog.h		OpenDb.h		clicklabel.h
+    FocusCombo.h		Options.cpp		
+    Help.cpp		Options.h
+    Help.h			PwDialog.cpp		
+    ImportMulti.cpp		PwDialog.h
+    ImportMulti.h		SearchPkcs11.cpp
+    ItemCombo.h		SearchPkcs11.h	hashBox.cpp
+    OidResolver.cpp		hashBox.h		kvView.cpp
+    OidResolver.h		kvView.h		
+    XcaApplication.cpp	validity.cpp
+    pkcs12EncBox.h          validity.h
+    pkcs12EncBox.cpp        XcaDetail.h
+                            XcaDetail.cpp
+    stubs.cpp
 )
 
 list(TRANSFORM xca_sources PREPEND ${PROJECT_SOURCE_DIR}/widgets/)

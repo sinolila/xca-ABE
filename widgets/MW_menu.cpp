@@ -142,12 +142,6 @@ void MainWindow::init_menu()
 
 	import = menuBar()->addMenu(tr("I&mport"));
 	import->addAction(tr("Keys"), keyView, SLOT(load()) );
-	import->addAction(tr("Requests"), reqView, SLOT(load()) );
-	import->addAction(tr("Certificates"), certView, SLOT(load()) );
-	import->addAction(tr("PKCS#12"), certView, SLOT(loadPKCS12()) );
-	import->addAction(tr("PKCS#7"), certView, SLOT(loadPKCS7()) );
-	import->addAction(tr("Template"), tempView, SLOT(load()) );
-	import->addAction(tr("Revocation list"), crlView, SLOT(load()));
 	import->addAction(tr("PEM file"), this, SLOT(loadPem()) );
 	import->addAction(tr("Paste PEM file"), this, SLOT(pastePem()))->
 			setShortcut(QKeySequence::Paste);
@@ -254,10 +248,10 @@ void MainWindow::setOptions()
 		return;
 
 	Options *opt = new Options(this);
-	if (opt->exec()) {
-		reqView->showHideSections();
-		certView->showHideSections();
-	}
+	// if (opt->exec()) {
+	// 	reqView->showHideSections();
+	// 	certView->showHideSections();
+	// }
 	delete opt;
 
 	pkcs11::libraries.load(Settings["pkcs11path"]);

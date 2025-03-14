@@ -22,9 +22,8 @@
 #include <QToolTip>
 #include <QHelpEvent>
 
-class db_x509;
+class db_key;
 class pki_multi;
-class NewX509;
 class OidResolver;
 class QProgressBar;
 class DHgen;
