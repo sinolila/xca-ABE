@@ -1,0 +1,1142 @@
+[33mcaa49980[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m xca_onlykey
+[33m29f8d7dc[m BG lang UI update (#609)
+[33m65c4601a[m Release XCA 2.8.0 done
+[33me46d88f6[m Prepare XCA 2.8.0
+[33m1105470d[m metainfo.xml: Replace io.github.chris2511.xca
+[33mba7ba02b[m Prepare Release 2.8.0
+[33m0ad15ffb[m Dutch Translation for XCA 2.8.0
+[33m6085f264[m 2.8.0 italian translation
+[33mdaebebc7[m Update Korean translation
+[33m83998fe3[m Update japanese translation
+[33mf1cf2b22[m Update polish translation
+[33mc9184b06[m Add SHA3 hash algorithms
+[33m6b1d95b0[m Merge pull request #594 from nevenko/main
+[33mcf8cdd15[m Merge branch 'main' of github.com:nevenko/xca
+[33mc1de5839[m Croatian translation for 2.8.0
+[33me0352415[m Update changelog
+[33mcaa0fa2c[m Adapt osslcodesign script
+[33mdc81c256[m Windows style changed from windowsvista to modernwindows
+[33m0db544c6[m Update Brazilian translation
+[33m24c0236e[m Sane import-error of encrypted ED25519 keys
+[33m96e45508[m Check supported minimum QT version 5.10.1
+[33ma8ee4660[m Close #593: App freezes/crashes when trying to export certain keys
+[33mfee62357[m Close #306 #537 Allow Database-driver options in config file
+[33mb2869e01[m Close #537: macos: Compile mariadb-connector and qsqlmysql
+[33ma14e045c[m lconvert PO based translations
+[33meb05397b[m Update Slovak translation
+[33ma881eb5e[m Merge pull request #592 from monnerat/french
+[33m0f12b062[m Merge pull request #591 from atriwidada/main
+[33mc1e9f740[m French translation for 2.8.0
+[33md8ff4dda[m Update Indonesian translation
+[33m53cbeea7[m Close #152: How can we specify the Cryptographic Service Provider
+[33m1fe2c990[m Remove linebreaks for better visibility
+[33m60c9eb5e[m Update shipped openssl libs to 3.3.2
+[33m7b9d75b9[m Close #590: MacOS OpenSSL legacy provider not loaded
+[33m2f7403dc[m German translation, finish the unfinished
+[33mbec6623b[m Fix minor typo with positional parameter
+[33mdbe92cbd[m Update german translation
+[33mebafdb02[m Update translations
+[33mac771d53[m Improve the 'trans' target to print me a reminder
+[33ma1874055[m Update changelog
+[33m4b76522d[m Close #199: Templates and Key Identifiers
+[33m2bb89cb8[m Disable Import button when creating a new template
+[33m5f430824[m Close #239: Check existing Name Constraints
+[33m2e7cb9f2[m Fix uic warning
+[33m97a14f2f[m Simplify issuer check and use the OpenSSL function
+[33ma8ebef92[m Extend Error messages by line and function
+[33mc3516128[m Chop the last newline from the hexdump of a bignum
+[33m7d3ff4f0[m Add OpenSSL PURPOSE and validation results
+[33mfa10ca43[m Close #587: Incomplete refactoring of adapt_explicit_subj
+[33m8390e958[m Allow live changes during import of a template
+[33m006ffef3[m Fixup for #287 - Templates don't export correctly
+[33m2b3f4dd0[m Combine #90 and #315 and support UPN in name constraints
+[33mcb1f0250[m Close #90, #361: Name Constraints (RFC5280 section 4.2.1.10)
+[33mc6304a07[m Close #296: Proper plurals
+[33m7376cce5[m Improve export file / dir  validation
+[33m09a29249[m OpenVPN is not PEM
+[33m1ac1dc0a[m Extend password write dialogs by the file name
+[33mec3dec0b[m Relates #88: Select a common or individual passwords
+[33mc8066319[m Drop the Password input message for PVK files
+[33m46c1b785[m Close #88: Export to multiple files
+[33m71f28ef0[m Test JWK export
+[33m28425b6e[m BioByteArray: add tests for new methods
+[33m60aefeac[m Close #313: Support JWK export format of certificates
+[33m2e70aa63[m Feature #313: Support JWK sets
+[33m778e5c2e[m Feature #313: Add JWK export
+[33m70788535[m Consolidate Bignum2ByteArray conversion implementations
+[33ma3dd931f[m Drop unneeded function BNoneLine()
+[33m307fbae8[m Close #359: Symlink to PKCS#11 lib resolved
+[33m070ad052[m Reduce the minimum required CMake version
+[33m418b78ce[m Fixup for #548: fix detection of portable app
+[33md256da38[m Fix debugging-info on Windows
+[33m20930345[m Update Changelog
+[33m775939b3[m Close #552: issues with icons in gnome dock
+[33md3150108[m Drop unused XPM image
+[33md66e2619[m CMake: fix dependency issue when creating documentation
+[33md5d9e863[m Whitespace fixup for CMake files
+[33m60ca5842[m Close #315 Support UPN type for EAP/802.1X certificates
+[33m73f1029f[m Constify extList
+[33me3a2789f[m Add infrastructure for korean translation
+[33m524d741d[m Add Korean translation
+[33m41eb2902[m Update changelog
+[33m14865e5a[m Test #287: template export/import
+[33m7f5bdb7d[m Close #287: template don't save/restore correctly
+[33ma2ea166c[m Close #351: a1int::getLong() doesn't handle all error cases
+[33m6777f7c8[m Close #401: Write PEM data to a file especially for crlgen
+[33me1fbba9e[m Close #548: export certificate: error using child folder
+[33mc08ccf4a[m Export-Test: put all export-data into a sub-directory
+[33m5528c122[m Relates #391: Test export of unusable certificates
+[33m6bf6f438[m Automatically generate documentation of export formats
+[33m9a0454b7[m Relates #391: export expired and revoked certificates
+[33mb03076c4[m Close #391: hide expired and revoked certificates
+[33m43f4a814[m Release XCA 2.7.0 done
+[33m390662af[m Prepare XCA 2.7.0
+[33md27cc876[m Update README and fix minor release-script issues
+[33m7f5f682d[m Update Changelog
+[33mfb82b0cd[m Merge pull request #582 from nevenko/main
+[33m973d043b[m Update croatian translation
+[33m8ca5494c[m Update brazilian translation
+[33m862e2b48[m Close #311: 2nd Fixup for a548227a073: install QT translation files again
+[33m02121134[m Close #304 oids.txt not found etc if prefix non-standard
+[33m3ac87b58[m Drop unused, leftover UI description TrustState.ui
+[33m63b54f93[m Add cmdline option to disable native dialogs
+[33m64d32137[m Test for #364 Export ED25519 private - add Tests
+[33ma4fc9aa1[m Close #364 Export ED25519 private key with password
+[33m4b6965d7[m Related to #364 fix writeSSH2private() function
+[33mc730a886[m Fix #364, comment#3: Remove ED25519 from PEM line
+[33m34f4c131[m Update slovak translation
+[33m7a903415[m Update japanese translation
+[33ma5af845e[m Update polish translation
+[33mc655ca0b[m Merge pull request #581 from xczh/v2.7.0-zh_CN
+[33mffcc0bde[m Update xca_zh_CN.ts
+[33mb0d9b214[m Merge pull request #579 from GH3844HL/main
+[33m5a183a11[m 2nd Fixup for flexible clipboard export
+[33m05782776[m Translate fr.po to xca_fr.ts
+[33m53aff412[m Merge pull request #577 from monnerat/main
+[33m671a8420[m Merge pull request #576 from Bazze69/Italian-translation
+[33mb732228c[m Dutch Translation for XCA 2.7.0
+[33m6efb6991[m Update french translation for release 2.7.0
+[33m5ff3e86c[m Updated 2.7.0 release italian translation
+[33mdf097925[m Trigger build on PR
+[33mdb55a09a[m Abandon 3DES triggered by #218 Encryption for exported keys
+[33m21b0c61e[m Merge pull request #574 from atriwidada/main
+[33mf8ac3089[m updated Indonesian translation
+[33m5c621007[m CMakeLists.txt: support SOURCE_DIR == BINARY_DIR
+[33mbd8398bc[m Update german translation
+[33m621a01ce[m Update translations
+[33m87f00ec2[m Update changelog
+[33mbc590c85[m Improve changelog
+[33mda59d1dc[m Revert "Close #480: add flatpak build information and github action"
+[33ma2ac41e2[m Extend linux app images by 128 and 256 bit PNG
+[33m014d96a7[m Close #561: Missing data: Qt6 compiling dependencies
+[33m39da47c2[m Drop support of encrypted PVK files.
+[33m8193988b[m Do not install xca.qch file
+[33mee482666[m Update OpenSSL versions
+[33md298291d[m Merge pull request #562 from Gnafu/patch-2
+[33m6b7db9fc[m Merge pull request #560 from Gnafu/patch-1
+[33m1d895009[m Merge pull request #558 from undermind/main
+[33mcc69abbe[m Fixup for flexible clipboard export
+[33m17f79d33[m Close #572: The ul label on the XCA official website is not closed
+[33m8a01ea87[m Update changelog
+[33m9d923183[m Fix ITMS-90886: Cannot be used with TestFlight
+[33mb2122130[m Windows/Mac build: switch to QT 6.6.3
+[33madd0be8b[m Close #554: Missing option to disable file association in Windows setup
+[33m61a89822[m Update xca_it.ts
+[33m7ffddac0[m Update xca_it.ts
+[33m8f1f1fc3[m Typos miscellaneous.rst
+[33m8cd012b2[m update russian translation
+[33m128f7d95[m Merge pull request #553 from nimdassdev/main
+[33m5d0204b8[m Merge remote-tracking branch 'origin/main'
+[33m218bf9ec[m Merge pull request #551 from Erfankam/fix_compiling_issue_in_tests
+[33m502e28e9[m Update xca_bg.ts
+[33mf004ad67[m Setup Python and pip with actions/setup-python@v5
+[33mbb32e30f[m Switch application direction depending on the language
+[33m2060d75f[m Close #395: Flexible Clipboard Export
+[33me1914d3f[m Improve translation file lookup on linux
+[33m56f6eaf1[m #550: Fix compiling tests issue by providing -pthread link flag.
+[33mc7565cf0[m Fix calendar export for CAs
+[33me3c2c40f[m Support importing existing OpenVPN TLS Auth keys
+[33m68b14617[m Add tests for the DateTime input for validity times.
+[33ma53e0a96[m ExportDialog add missing file extensions
+[33m12e761ee[m Fix renewal test
+[33mf3ed7ef0[m Fix missing takeys table in new databases
+[33m582ee06a[m Update german translation
+[33mc17a3de9[m Update translations
+[33ma9c5466e[m Make more texts translateable
+[33m6a71ea21[m Fix "Copy extensions from request" function
+[33m53dfdb35[m NewX509: use enum instead of int for clarity
+[33m7c2a805e[m Fix login via PinPad on e.g ReinerSCT
+[33m935bcedb[m Merge pull request #547 from Erfankam/update_lang_fa
+[33m887d9507[m Merge pull request #546 from botboe/patch-1
+[33m966b9976[m Fixed some small typos.
+[33m7dab0075[m Updating Persian translations due to call for update
+[33m17258633[m Macos: Build on Github with SDK-10.15 and Qt5
+[33me72ffb14[m Extend #383: tag insecure PFX/PKCS#12 algorithms
+[33m10e8385c[m Extend #383: support PKCS#12 export format: pbeWithSHA1And40BitRC2-CBC
+[33mb395eaa5[m Close #536: macos include OpenSSL legacy provider
+[33mc0df4b57[m Close #532: XCA not in English on macos
+[33m3457454e[m Close #531: XCA cannot properly access a YubiHSM2
+[33m1199d776[m Close #89: ta.key for OpenVPN tls-auth
+[33m0dd587a3[m Move OpenSSL configuration file generation
+[33m8f307d42[m Merge pull request #534 from xczh/v2.6.0-zh_CN
+[33m61c46346[m Update xca_zh_CN.ts
+[33m06009705[m Close #496: PKCS11 access to AWS CloudHSM failed
+[33m4b379020[m Yubikey select one of the special IDs
+[33m844e7463[m Yubikey: add p11.tokenLoginForModification()
+[33md52708e5[m Consolidate Workarounds for special tokens
+[33m7e3b0e12[m Add pkcs11::closeSession() to fix token management
+[33m9acf23cd[m Fix documentation typo
+[33m46e82e25[m Constify tokenInfo() and findUniqueID()
+[33maffc2dca[m Update changelog
+[33m52da070d[m Edit Release Notes for 2.6.0
+[33mb26f74f3[m Release XCA 2.6.0 done
+[33me5144840[m Prepare XCA 2.6.0
+[33m80f457a9[m Export Dialog: Avoid appending the wrong extension
+[33m45253fae[m Close #516, #502: XCA remote database documentation
+[33m27853766[m Fix deletion of dialog pointers
+[33ma25b6c74[m Close #520: permanent processor load
+[33m6b9c16a3[m PEM Export of keys: Avoid endless loop
+[33m85875666[m Fix segfault during cmdline import
+[33mc3ab4432[m Merge pull request #529 from abmaymic/dockerimage
+[33m252707ac[m Set userid at container startup rather than build time. Update documentation on container invocation and usage with SSH-X-forwarding.
+[33m5df98568[m fix build breaking on configure of tzdata-package
+[33m8f8003ca[m Github actions: Update checkout and upload actions
+[33mf9fddc31[m Database schema update: accept newer versions
+[33m4a9f59fe[m Merge pull request #526 from Bazze69/Italian-translation
+[33m9e766653[m Translate fr.po to xca_fr.ts
+[33m2957332b[m Update french translation
+[33md8f8fb7f[m Italian translation updated
+[33madf6f377[m Update xca.desktop with italian comment
+[33m09fa8482[m Update brasilian traanslation
+[33mec7efed6[m Documentation: add information about password format
+[33m26883013[m Translation: translate help dialog on language change
+[33mda42acdc[m Update documentation
+[33m2df1dc13[m Merge pull request #525 from nevenko/main
+[33ma4a414a6[m Merge branch 'main' of https://github.com/nevenko/xca
+[33m95a1a080[m Merge pull request #524 from GH3844HL/main
+[33m08438255[m Merge branch 'chris2511:main' into main
+[33m106b2139[m Updated Croatian translation for 2.6.0
+[33m5d2acfc4[m Merge pull request #522 from atriwidada/main
+[33m8af13168[m Dutch Translation for XCA 2.6.0
+[33m9ab0b222[m Update contact information of japanese translator
+[33m42de4810[m Update japanese translation
+[33m45635dfb[m Update slovak translation
+[33m40a8194c[m Added Indonesian explanation for xca.desktop
+[33m8e1cb956[m Updated Indonesian translation
+[33m3a8ddf48[m Reorganize exportdialog
+[33m56a1fdfc[m Fix translation of export format description
+[33m6484a0a4[m Update german translation
+[33m663a4029[m Update translations
+[33m92408696[m Rename wrong header of key export
+[33m17b53b0e[m Update german translation
+[33m4d6ec488[m Revert "aqt somehow suddenly fails to download Qt 6.6.0"
+[33m687dab87[m Related to #519: improve validation icon
+[33mf07d25a0[m Update copyright years
+[33ma97229ae[m Update OpenSSL version for builds
+[33m0d100615[m Always build tests to ease automatic testing
+[33ma20e8104[m Update Windows build to install legacy.dll
+[33m44be50a4[m Change B64_BLOB pattern to make th file parseable again
+[33ma4d8cba0[m Document flatpak build
+[33m407c92ce[m Update translation
+[33md813cccb[m Update changelog
+[33m0a1a2160[m Close #518: Export certificates for ovpn file
+[33m6d01928d[m Automatically transform the key encryption scheme
+[33me4483bc4[m Move password verify logic into separate function
+[33md17131d2[m Warn in case of weak PFX algorithm configured
+[33m286ae967[m Fixup warning introduced with 5dc8e7fd
+[33md32ab2e0[m Close #458: Re-add support for legacy keys
+[33m7d44c561[m Merge branch 'monnerat-delete-after-revoke'
+[33m4af931e8[m Reproduce #493 - Renew Certificate freeze XCA
+[33m4cb7b206[m Explicitly set SHA1 based MAC for PKCS12 for legacy algorithm
+[33m469d24eb[m Test export functionality and indirectly the import
+[33m5dc8e7fd[m Fix a use-after-free crash
+[33m2f482fc7[m pki_base: cache the hash
+[33mb6ce91b8[m Database schema: use string.replace for TEXT/LONGTEXT
+[33mf3dc07c0[m Testing: reduce test-declaratipn code
+[33m88989e2c[m Automatically use ccache if possible
+[33mdcf9f419[m Update translations
+[33mc1245474[m Translation: fix translation sources and xca.pot
+[33m0775dbf1[m Move GUI tests to test/ subdir
+[33m1891828d[m Prefix app-icon and desktop-file by de.hohnstaedt.
+[33m41ff6818[m Repeat password input on bad password
+[33m0c1c0096[m Fix whitespace errors
+[33mb9622f8a[m Use QVERIFY where appropriate
+[33m5c3f1b33[m Test: add digest-handling test.
+[33mdbe9eaa8[m Extend GUI test by PEM import
+[33mec1c233d[m XcaWarning: Make print function virtual
+[33m89b3914f[m Split tests in "gui" and "console" tests
+[33m143d059d[m Take care of OpenSSL and LibreSSL compatibility
+[33md29d55ab[m Close #477: paste an encrypted private key results in a crash
+[33m8bd6141f[m Set OpenSSL default UI to not fallback to commandline
+[33mb88a2029[m Move testxca target to the tests target
+[33m06c64664[m Update changelog
+[33m1fdc0566[m Replace all C_FILE by __FILE__
+[33m67044439[m On GCC and CLANG use -fmacro-prefix-map
+[33m41e46c1f[m ASAN: drop more ressources on exit
+[33m43e1b336[m Fix crash when deleting CA certificates
+[33m5b90728f[m Update Openssl to 3.1.4
+[33m4fe06de7[m Improve error handling in case of a wrong private password
+[33m1d42fa62[m Drop unneeded file ExportOptions.plist
+[33m5162369a[m Close #480: add flatpak build information and github action
+[33me3791e26[m Add GUI test - testing the NewKey dialog
+[33m1599409b[m Remove duplicate Help-Button in CSR view
+[33mf28ab5c3[m Extract cmdline handling from main.cpp
+[33mcbaa8eba[m Extract debug_info class from main.cpp
+[33mcd1c1489[m Revert "Warning: 'kIOMasterPortDefault' is deprecated"
+[33m432293ad[m x509name: add module test and fix memory issues
+[33m0391e6e2[m Warning: 'kIOMasterPortDefault' is deprecated
+[33md56d47e7[m Related #405: manage X509_NAME in QSharedPointer
+[33m2dd2477d[m Add tests for entropy and asn1time
+[33m7db5b704[m Close #405: member functions of a1int class have memory leaks.
+[33md36b32fe[m Close #402: Subject Alternative Name not filled by all CN
+[33m6cfd0174[m Execute module tests in github actions
+[33me2e142e0[m Add some moduletests
+[33m80416fb0[m Split basic functions
+[33m7b02ae41[m Drop ancient approach for testing
+[33m23a044f5[m Support different OSX SDK versions as LSMinimumSystemVersion
+[33m84b4c3b7[m Macos: Transporter says it wants LSHandlerRank
+[33mf7ccee25[m aqt somehow suddenly fails to download Qt 6.6.0
+[33m405bc0ca[m Catch invalid-key description error
+[33m570a6c10[m Add build script for MSYS2
+[33m94a1eced[m Make XCA templates viewable for import
+[33mfc0191a5[m Disable Public key import when displaying key of cert
+[33m993da2d4[m Use C++11 initializers for all non-static class members
+[33m7f4794ff[m Improve import: Finish multi import when empty
+[33m3e62f112[m Add File extensions in Info.plist supported by XCA
+[33m4bfa81d4[m More #442: Fix more leaks
+[33m07d81331[m Avoid database access without open database
+[33ma39c9448[m main.cpp:cmd_help(): don't use exit(), but return
+[33m2333b02d[m Close #384: Quick view of certificates without trying to open XCA
+[33mec9dd9ac[m Apple disable codesigning if no certificate exists
+[33m6dd1ceb7[m Rename calculated VERSION.txt in BINARY_DIR
+[33mde3de974[m Extend Release Notes
+[33m4a0f90e1[m Drop unneeded allitems pki collector
+[33m3a736974[m Drop global pointer to mainwin by fixing its last user db_x509
+[33m42b76418[m Enable Warnings and fix them
+[33m387c238d[m Close #459: pass private key password
+[33med074537[m Translations: Fix warning in xca.ts and add languages to Info.plist
+[33m8f05c3ea[m Close #465 Export PEM + Key in one File
+[33m9b749d79[m Close #460: Impossible to import PKCS#12 (RC40_CBC)
+[33m954eec95[m Improve hash selection, especially for ED25519 keys
+[33m3c059b1d[m Add HTML headers around the generated changelog.html
+[33mbe31b6e2[m Make XCA AppStore compliant with -DAPPSTORE_COMPLIANT=ON
+[33m856032b4[m Silence warning message
+[33m1159844c[m Show the real path of the running executable
+[33m270152e7[m Add db transaction around the removal of a CA certificate
+[33m751d4260[m Fix documentation typos
+[33m8aaffcde[m Alphabetically sort the languages
+[33m1af364b8[m Dutch Translation for XCA 2.5.0
+[33m472d9e72[m Generate changelog.html from changelog
+[33mcc9245b1[m Fix release scripts after release ...
+[33md8e4f2b4[m Release XCA 2.5.0 done
+[33m4ddb0861[m Prepare XCA 2.5.0
+[33m50fe5073[m Update changelog, README and release docs
+[33m3417411b[m Github action: Back to Server 2019 for Qt5
+[33me1a4e905[m Revert "Fix github compile error by using the QT provided compilers"
+[33me1601603[m Fix item search
+[33mf457a991[m Reduce debug code
+[33m0bce272b[m Fix github compile error by using the QT provided compilers
+[33me39be9b4[m Close #423: parameter --name is not respected when running with CLI
+[33m7b2342f5[m Close #457: Support Qt5 < 5.12
+[33mcccc8ee1[m Close #440: yellow background makes date text hard to read in dark themes
+[33me8cd69c4[m Drop references to iostream
+[33mc3f58d40[m Close #437: loading CRL at startup generates an error
+[33m65b10c33[m Close #444 cannot update template internal name
+[33m03a61dcc[m Fix crash while duplicating templates
+[33m26d5c738[m Improve EVP_PKEY_check()
+[33m88fe2002[m Close #457: python3-sphinxcontrib.qthelp not work on Raspberry Pi 4
+[33mc1bee8b3[m Close #442: asan checks failed
+[33md50381d9[m Fix SQL Option names in man page
+[33m52f1cf33[m Catch PEM_read_bio_* read errors
+[33ma324d1fa[m Close #446: show more information in Recent Databases
+[33m2e36fd43[m Macos: fix messagbox
+[33m65f26769[m Q_OS_MAC is deprecated
+[33m2b59f07b[m Make sure QT_MESSAGELOGCONTEXT is always set.
+[33m99a7768f[m Improve/Fix database loading
+[33m441bc863[m Really erase element after deleting
+[33mdfb2489a[m Select newest issuer when importing certificates
+[33mb96951fd[m Improve EVP_PKEY_public_check()
+[33mcb244521[m Update my release notes
+[33m4de3734a[m Update translation files
+[33mbdeb9c46[m Document vCalendar/ics feature #456
+[33m3a71997a[m Update changelog
+[33m5e346353[m Document the attempt to build universal mysql plugin
+[33m0c5f4889[m Consolidate SQL Driver delivery
+[33m5cdd1e13[m Improve database plugin detection
+[33mc3485979[m Use existing font "Courier New" monospace font
+[33md36eefaa[m Use correct free() function
+[33m3261dc85[m Update version of QT to 6.6.0
+[33m5ed19e68[m Optical improvement of main- and help-window
+[33mda01866f[m Templates: Only support PEM like export format
+[33m8ce8991e[m Update documentation
+[33m96ca26cc[m Integrate bulgarian translation
+[33mc25b9f9e[m Merge pull request #453 from nimdassdev/main
+[33m79d48017[m Merge pull request #452 from Erfankam/update_lang_fa
+[33m1fdba9ca[m Bulgarian language support / XCA
+[33m330eb111[m #451: Update Persian(Iran) translation .ts file to XCA.
+[33m11a88781[m Merge branch 'vertical-align-fix' of github.com:gentoo90/xca
+[33m1e06d60f[m Fix vertical text alignment in the tree views
+[33m061f6760[m Improve/simplify item import
+[33m1176a35f[m Debugging: allow to select/deselect debug messages
+[33m22c37082[m macos: re-add entitlements when codesigning
+[33m8983e501[m Fixup for a548227a073: install translation files again.
+[33m9fd0be4b[m Switch to 6.5.1 and drop "Messagebox Workaround"
+[33mb126890b[m Revert "Messagebox: Workaround for error not showing up"
+[33m827db695[m Close #368: error while creating CRL with CA using EC key (ed25519)
+[33m8662eff3[m Basic Constraints Pathlen: restrict input to postitive numbers
+[33m8f277ea7[m x509v3_ext: Improve error-checking
+[33m5f5ed2f2[m Remote database names lost their numbers in recent Qt
+[33m78022519[m macos CMake defaults for local arch, SDK and brew-Qt
+[33m3e284b12[m CMakeLists.txt: Improvements
+[33meeedd6ec[m Messagebox: Workaround for error not showing up
+[33m8f2b26e3[m Fix minor documentation typos
+[33m206fe060[m Update POT
+[33ma548227a[m Use Qt6 qt_add_translations to generate translation targets
+[33mf766fcbe[m Automatic move of translations between contexts
+[33m3524cf63[m Merge branch 'main' into br
+[33m982525e2[m Update translation files
+[33m391c97a3[m Merge github.com:eduardomozart/xca
+[33m7f2760e6[m Update translation files
+[33m72a2fe09[m Run lang/po2ts.sh
+[33md4c23db3[m Merge github.com:burasuzu/xca
+[33m9bf8de70[m Fix Github Actions
+[33m2ad23f03[m Fix translation installation
+[33m331d2ca5[m Windows: switch to OpenSSL 3
+[33ma451dcf0[m Optimization of Japanese translation
+[33m924c5696[m Github action: macos: only build for x86
+[33m4a81525d[m Add missing smartCard entry
+[33md8da9dd7[m Really exit the application, when clicking exit
+[33mfbc010a1[m Close #426: Build Error - fix documentation in README.md
+[33m5a92f680[m Merge pull request #428 from driseley/fix-cka-id-handling
+[33md6d6d7d9[m Update copyright years and adapt build scripts
+[33mfdf48c8b[m PR #425: Refresh supported hashes after key generation
+[33m46c0f7ed[m Fix OpenSSL 3.0 engine asking two times for sign
+[33m02fc95c7[m Reset parent pointer when removing child from container
+[33mab17dfd5[m Simplify key checking algorithm
+[33md606254f[m Additional attributes when printing PKCS#12 content
+[33m7206024d[m Fix deprecation warnings
+[33mfa0d67b2[m Adaptions for QT 6.5 and macos
+[33m5f8176a1[m Treat CKA_ID as byte array, not Bignum
+[33m327bd086[m Update xca_pt_BR.ts
+[33m2ba114d3[m Merge pull request #389 from sake/pkcs12_algo
+[33meb668365[m Fix command line parsing
+[33m706ad7bf[m Add note where to find allowed PBE encryption schemes for PKCS12
+[33m097cbfb8[m Add PKCS12 enc algo setting and use it when exporting PKCS12
+[33md177f8cd[m Add PKCS12 encyrption algorithm combo box
+[33mef8d90e5[m Add PKCS12 encryption algorithm class
+[33m48acc326[m Add PKCS12 encryption algorithm class
+[33m401b1a7a[m Use PBE algo for key and cert encryption in PKCS12
+[33mdac8f97c[m Fix images and icons on windows
+[33mbd61f44e[m Refactor source file inclusion
+[33m86f24d14[m Matrix with QT versions
+[33mc873cc1a[m Fix installation of documentation
+[33mced6dfc4[m Add support for Qt6
+[33mded935b0[m Prepare for Qt6: QRegExp -> QRegularExpression
+[33mee842feb[m Improve windows compatibility
+[33m5441d91b[m Fix runtime error because of wrong DLL
+[33m4bf49de8[m Win32: Zip the portable app after populating the directory
+[33me6d23fbd[m Win32: make install creates xca-portable
+[33m82c0b732[m Disable Openssl deprecation warnings until
+[33m0a54a0ad[m Fixup for #67: Password input dialog
+[33m1c542916[m Close #321 - extend commit d289f83a6df5cd07
+[33md289f83a[m Fix #321 - decryptKey shows OpenSSL error, which were raised before
+[33mf4cb91d2[m In the documention mention creating a datatbase
+[33mda00a50b[m Don't construct english sentences
+[33mf7a6c392[m Support building with xcodebuild
+[33m22e6cb37[m Improve *DeployQT
+[33m683a08ee[m cmake: fix dependency issue complained by xcode
+[33m31e6fdd3[m Fix OpenSSL 3 compatibility in ED25519 smartcard code
+[33m26883460[m Merge branch 'persian translation'
+[33m4e194b02[m Integrate persian translation
+[33mbb37b56e[m Merge #325 Update entitlement.plist
+[33m186657fb[m Close: #366 Not Responding after upgrade
+[33m21536e60[m Use CMAKE_INSTALL_DOCDIR for docs location
+[33m556b7950[m Add Persian(Iran) translation .ts file to XCA.
+[33m7e51ba9f[m Merge remote-tracking branch 'github/main'
+[33med475c8d[m Close #327: "Dump database" dumps everything to everywhere
+[33mf7078bd2[m Merge pull request #350 from linusklan/patch-1
+[33m3f0730b3[m Merge pull request #363 from georgekelly1097/main
+[33m3432c164[m Add vcruntime140.dll
+[33m0ad58720[m Improve documentation
+[33m2d8269fd[m Merge branch 'ya-isakov'
+[33m6d098460[m Support importing ED25519 keys and signing with them, using PKCS#11 tokens
+[33m3865281a[m Update Documentation and Dockerfile
+[33mec02e4fb[m Add osslsigncode script to sign the msi
+[33mc0b3ddb7[m Adapt Manufacturer
+[33m81a5540e[m Improve Installation and DMG generation
+[33md3243a0c[m add to README's dependency list to prevent cmake-missing error, and "Could not find a package configuration file provided by Qt5Help" error
+[33m882a5cad[m Bugfix: contents.rst not found
+[33mbab9477e[m Merge pull request #336 from melg8/fix_crl_digest
+[33m2d8ebfe2[m Enable usage of crlNumber from user
+[33m3f6b0105[m Enable usage of hashAlgo digest selected by user for CRL sign
+[33mc53aabbb[m Issue #300: Extend documentation about database extraction
+[33md4822cfa[m Merge pull request #335 from melg8/fix_icons_names
+[33m0d26913f[m Merge pull request #334 from melg8/fix_pkcs_8_private_key_encryption
+[33ma1134f53[m Merge pull request #333 from melg8/fix_memory_3
+[33m638f02fb[m Merge pull request #332 from melg8/fix_memory_2
+[33m8a2daac2[m Merge pull request #331 from melg8/fix_memory_1
+[33m40638847[m Add missing comma between two image names
+[33m7bef74fb[m Enables usage of aes_256_cbc for private key export
+[33m4e126997[m Fix wrong pointer type casting
+[33m2288ac9e[m Fix possible null pointer dereference
+[33m3eeb33cb[m Fix new/delete mismatch
+[33m72ab898d[m Update installation documentation
+[33mda8efa43[m Add github cmake build instructions
+[33mba6ba20a[m dynamic.wxs: Improve OpenSSL DLL path
+[33m06fbe10d[m cmake: fixup undefined variables
+[33m3f5930a4[m cmake: use BYPRODUCTS keyword to make ninja work
+[33meea60e79[m Silence sphinx output and avoid duplicate sphinx output
+[33m4a30db96[m Improve dependencies in cmake files and add sensible defaults
+[33mcdc37538[m Rename VERSION to VERSION.txt
+[33m069f4e6b[m Drop unused files
+[33me92031cf[m Drop debugging output
+[33mc66354ec[m Close #317: "Please insert card: ..." message
+[33m5aec491d[m More improvements on Windows installer
+[33m44bf1b4e[m Fix detecting the language directory
+[33m284b1fa3[m Call getHomeDir() later, after global constructors
+[33m389b459a[m Windows: re-add application icon
+[33m4d401792[m OpenSSL: Avoid all FILE pointer operations, use QFile
+[33md73d4ccd[m Windows MSI: Improve WXS file creation with cmake
+[33m25d2fdab[m Fix and improve building help and documentation
+[33m7ee80dc1[m Install xca.completion in bash-completion/completions as xca
+[33m2283aa82[m cmake: Set default install dir to /usr/local
+[33m435602d5[m Convert to native separators in calendar items
+[33ma70ffe4f[m Move XcaDialog call from x509_super to XcaWarning
+[33m97bece67[m Typo in german translation
+[33m6ea01e80[m Refactor item export: separate GUI and database
+[33m48bed71f[m Enable-disable PEM comment checkbox
+[33mf2fe9be3[m Move file loading GUI element out of non-gui container class (db_*)
+[33m6efba2bb[m pkcs7: Fix endless loop when loading PKCS#7 via PEM import
+[33mbe1a44d0[m Consolidate export types and format in pki_export class
+[33m36e02374[m Put XcaWarningBox on the stack not on the heap
+[33m8271a1a3[m MacOS: Fix location of translations
+[33mb10c6c80[m Extend PR: #307: Enable indonesian language
+[33m68b095e3[m Merge branch 'master' into main
+[33meb6eb7b3[m Merge pull request #307 from atriwidada/master
+[33m30e95682[m Merge remote-tracking branch 'github/master' into main
+[33md534a6df[m Merge pull request #302 from kpcyrd/repro-gzip
+[33m20ff318a[m Merge remote-tracking branch 'github/master' into main
+[33me0b72806[m Merge pull request #295 from PF4Public/translations
+[33m3e858c87[m Merge remote-tracking branch 'github/master' into main
+[33m13b09927[m Set Key export format separately via context menu
+[33m810b5509[m pem_format(): Move private key cases to pki_evp
+[33mac506c83[m cmake: Build successfully, even without qthelp and qtcollgen
+[33m5bc781bc[m Improve MacOS cpack installation and signing
+[33m64cd58ef[m Build sphinx documentation duting the default target
+[33mc7525089[m Separate XCA Warning in Cmdline and GUI
+[33me9f36fc7[m Move storeItems() from db_base to XcaTeeView
+[33mfb2c9a7d[m Add Indonesian translation
+[33m9b4bc75f[m Reproducible Builds: Don't embed timestamps in xca.1.gz
+[33md56fdc25[m Update Russian Translations
+[33m37fea88b[m Update German translations
+[33md2dbabb0[m Update translation files
+[33m56c6df6c[m editComment: Move Gui elements to widgets/XcaTreeView
+[33m8c0a5adc[m Merge pull request #288 from PF4Public/pf/replace
+[33m2f70cb13[m doc/CMakeLists.txt: fix building the sphinx-qthelp
+[33m8af3cabf[m Replace certificate while renewing it
+[33m76763ea9[m cmake: include() the CMakeLists.txt file
+[33mae008782[m cmake: Improve packaging
+[33m2114f111[m cmake: add "package" form linux/unix
+[33m6de3816a[m cmake: Improve creating the .txt files
+[33m1397f10a[m cmake: Add target "release" to create a tar.gz from a git tag
+[33m8cdc15aa[m Move database_schema.cpp from widgets to lib
+[33mf09589f6[m PO to TS conversion works well as script.
+[33ma233ec89[m QObject: Add Q_OBJECT macro where necessary
+[33me78a254b[m cmake: Always set CMAKE_VERSION_[MAJOR|MINOR|PATCH]
+[33m52bf30e4[m Visual Code adaptions
+[33m2cc1369c[m lang: CMakeLists.txt: add "trans" target
+[33m0e5af2e4[m Replace check_oom() by Q_CHECK_PTR()
+[33m915a920d[m cmake: Split CMakeLists.txt into the different sub directories
+[33m04f7ecac[m Install GLOB *.html instead of recursive directory
+[33m1d29acf0[m Remod duplicate 16x16 icon installation
+[33m9180a3ea[m Move font information from db_base to TreeView
+[33mcfe788d3[m Don't store the current locale ourselves. QLocale() does the job
+[33mf5f6b57d[m Fix translation handling.
+[33me066619a[m Close #283 Nitrokey HSM2 can't create EC keys on 2.4.0
+[33m00926e3e[m Get rid of libltdl. QLibrary provides the same functionality
+[33m61fa66b1[m Add digest class encapsulating EVP_MD
+[33m4e2a4b7d[m Move default keyjob from NewKey to the keyjob class
+[33md319a68b[m Properly escape backslash
+[33m731d866b[m Drop more unneeded includes
+[33m9c49c994[m Consolidate and document used environment variables
+[33m487f5e20[m Cleanup: Drop many superflous includes and unused loadImg() function
+[33mf8915fbc[m PwDialog: Split into cmdline-core and GUI
+[33mb8afc06c[m cmake: Build macOS icons only on macOS
+[33mf1c0e964[m Cmdline: no-gui autodetect: also detect --crlgen=xxx as nogui
+[33m0c5603ec[m XcaWarning: Split into Core and GUI element
+[33mc8d99422[m Check availability of qcollectiongenerator to generate documentation
+[33m68273d0a[m Switch from autotools/qmake to cmake
+[33m1adcceaa[m Drop OpenSSL backward comatibility for NID_tlsfeature
+[33md8283d8a[m Read oids: Avoid out of range access when reading OIDs
+[33mb20ef7f3[m Diffie-Hellmann: use XcaProgress dialog
+[33m82da759a[m XcaProgress: separate Cmdline progress from GUI progress
+[33m2621d20d[m make dbhistory independent of GUI widget OpenDb
+[33m7f431ccb[m Fix typo introduced with 5f1d3945 to query the database password
+[33m184220e6[m Fixup typo: extend the underline of Download
+[33m30a38aa7[m Merge pull request #289 from PF4Public/patch-1
+[33m2c1cdde7[m typo
+[33m2635b910[m WIP
+[33m03769bef[m Add commandline option "select" to 'print', 'pem' or 'text'
+[33m51489747[m Update xca_fr.ts from fr.po
+[33mf69c0e14[m Merge pull request #286 from albanobattistella/master
+[33med5e605f[m Merge pull request #284 from monnerat/master
+[33m36abc2b4[m Update xca_it.ts
+[33m9b1fce65[m Update french translation
+[33m267bf4f8[m Close #281: xca 2.4.0 breaks macOS Mojave compatibility
+[33m802a8787[m Adaptions to stay OpenSSL 3.0 alpha16 compatible
+[33m3bce3ae1[m Fix travis build
+[33mfbee826e[m Switch from Qt4 to Qt5 in Travis docker file
+[33me0dc4446[m Close #278: Miss components to connect remote database
+[33m133e1de1[m Fix output file for xca-icons.icns
+[33m00e592d8[m Sort output of "--issuers" and "--list-items" by primary key
+[33m82936fa3[m No need to especially mention brainpool curves
+[33mccfad6a1[m Replace qWarning()s by qDebug()
+[33m7e72d8c0[m Commandline: Add "--list-items" to print a list of database items
+[33m5f1d3945[m Close #67: possibility to ignore password prompt from CLI
+[33m8daf06dc[m Close #259: Follow the XDG base directory specification
+[33m7d564132[m Move ca-properties dialog to the certificate view
+[33m523fa644[m asn1ToQString: use OpenSSL's ASN1_STRING_to_UTF8()
+[33m57802580[m Drop backward-compatibility for old(<2.0.0) XCA databases
+[33m1500e636[m Drop OpenSSL backward compatibility hacks < 1.1.0
+[33md5fa97c3[m Drop support for Qt4
+[33m957bdbaa[m Put release related files into an own sub-directory
+[33m63d1a465[m changelog.html: Special html changelog for the web site
+[33m144cdee4[m Release XCA 2.4.0 done
+[33m5193d34f[m Prepare XCA 2.4.0
+[33md537e40d[m More documentation update
+[33m2c38ddbd[m Set default key size to 2048 instead of 0
+[33mdea42e8d[m Minor documentation update
+[33mf24038bb[m Update changelog and copyright year
+[33mf7e144ba[m Bash completion: include files in the completion list
+[33mc2d88bf4[m Database.close() is idempotent. Call it at the end unconditionally
+[33md54819e1[m database_model: better handle uncreateable databases
+[33m0232d20b[m Forced sandbox only for the Appstore app
+[33m98d5a7da[m Close #247: improve Apple silicon (M1) compatibility
+[33m0f98d17f[m Close import-dialog when it is empty
+[33m703d9c0b[m sql: better handle SQL errors during insert
+[33m5fbd35ab[m xca.app: don't copy misc/*.txt to xca.app/Contents
+[33mb45bcd8d[m Close #247: Apple silicon (M1) compatibility hints
+[33mca010e74[m Update italian language
+[33mf5719361[m Merge pull request #275 from sleiner/fix-m1-build
+[33m469728c8[m Merge pull request #272 from WRW001/patch-2
+[33mbb425faf[m Merge pull request #273 from WRW001/patch-1
+[33m5b7aa117[m NewX509: select correct help context by tab
+[33m2eb621e6[m NewX509: directly call the NewKey and RequestDetail dialog
+[33m9fa6b2ae[m INSTALL.mac: Install Qt 5 as dependency
+[33m27fa06ad[m Find libtool without pkgconfig when using homebrew
+[33m1274c682[m Use $(brew --cellar) instead of hardcoded paths
+[33mb805fc20[m ImportMulti: Fix use-after-free issue
+[33m4aad4233[m MainWindow: re-enable dropping a database onto the application
+[33m261f84c4[m ImportMulti: change modality to not block the help window
+[33m40a241a1[m Help: Raise the help window when clicked on help.
+[33m49067152[m Fix header build
+[33m583b9f82[m Improve windows icon
+[33mfe139421[m Add 48x48 sized icon and icons for *.xdb and *.xca files
+[33m05c9db8b[m Enable Package signing for Microsoft
+[33mfe7e9fe3[m Improve Help installation on windows
+[33md7cc443c[m Synchronize divergated icons on several platforms
+[33m951a797d[m Update eku.text
+[33m40ebeae5[m Update oids.text
+[33m72ec14d7[m Update brasilian portuguese translation
+[33mb44844e7[m Fix Travis build with sphinx documentation
+[33m7e414ab3[m Update eku.text
+[33m4cc9168b[m Update oids.text
+[33mf04f43f4[m Updated slovak translation
+[33m298c53bf[m Fix build (ignore documentation) if sphinx is not available
+[33mb9071039[m Update documentation
+[33mf17811b5[m Improve make dependencies
+[33m95f277f1[m Always set reasonable LSMinimumSystemVersion
+[33m5d4b52ac[m Fix opening a database on startup.
+[33m71fb8edc[m Improve patchlevel calculation
+[33mab9af293[m Merge pull request #271 from GH3844HL/master
+[33m17bcb837[m Merge pull request #270 from nevenko/master
+[33m15dc5887[m  Update Dutch translation for 2.4.0
+[33m29ccee5b[m Croatian translation for 2.4.0
+[33m8c04bc2b[m Rename PACKAGE_VERSION to XCA_VERSION
+[33m38a16da2[m XCA does not compile against OpenSSL 0.9.8 anymore
+[33m48e211b8[m Improve error message during commandline import
+[33m43da44fb[m Update german translation
+[33m4e515030[m Update translation files
+[33m3d03f7d8[m Declare ITSAppUsesNonExemptEncryption:No for AppStore
+[33m7af3ffee[m Make the macOS SDK release a configure option
+[33m7a05d562[m Change versioning schema: drop iteration counter
+[33m4632a457[m KeyDetail with ReadOnly option
+[33m05db6b5b[m Adapt build methods for Apple developer account
+[33m5578e678[m Fix build and installation for Windows
+[33md42a2e83[m Improve ENABLE_DOC setting
+[33m90cd685f[m Improve documentation generation out-of-tree
+[33ma81ee336[m pki_key.cpp: The key-type string in the database is only 4 bytes
+[33me32fce85[m main.cpp: mainwin must exist for read_cmdline() in GUI mode
+[33m87c4729d[m func.h: The mainwin is global
+[33m51f3418c[m db_base.cpp: Improve loading database content
+[33mca0fdcd5[m Bash completion
+[33m67a05147[m Update changelog
+[33mff7704ff[m Add context sensitive documentation
+[33m4f706fb3[m Move Help window into separate class
+[33m7ace0db0[m Add ED25519 support for commandline key generation
+[33m46f6959f[m Update xca.pro
+[33md53d64d2[m Transform XCA documentation from SGML to sphinx
+[33mb0190bf8[m Update changelog
+[33mc05b58c6[m Fix for building against libreoffice
+[33m0bdd9644[m Use .priv as SSH private key extension
+[33m7f9f61c5[m Issue a warning when using an insecure hash algorithm
+[33m9f0d7074[m Fix issuing ED25519 certificates
+[33m45de7474[m Add support for SSH2 ED25519 private key export
+[33m241abffa[m Close #258: xca aborts on exit and on access to own templates
+[33m6d76fe12[m Close #142: Support Ed25519 Export private SSH2 key
+[33mfdb2894e[m Close #142: Support Ed25519 Import private SSH2 key
+[33m9cd58ff2[m Close #142: Support Ed25519 Import public key
+[33m86cfff35[m Close #142: Support Ed25519 Public export an Details
+[33mdbb3c48e[m Close #142: Support Ed25519 Keygen
+[33m1a0ef9c9[m Extend OpenSSL 1.0.2 compatibility layer
+[33m58896e1d[m INSTALL.mac: Fix minor documentation typo
+[33m46cbba45[m pki_evp: Fix indentation
+[33m25347fa2[m OpenDb: Fix opening remote database when local DB was open
+[33m496fb5e0[m Close #251: AuthorityKeyIdentifier: use issuer:always
+[33mbab4326c[m Change language maintainer of brazilian portuguese
+[33m1c97a129[m Complete brazilian translation
+[33mc90302dd[m Close #230: Change PKCS12 export extension from .p12 to .pfx
+[33m66cff37a[m Close #208: XCA hung when importing EC keys. For example prime256v1
+[33ma12266df[m Merge branch 'master' of https://github.com/rlinfati/xca
+[33mebfbbcb5[m Extend commit f03ea67bddd4 by adding the OIDs to OIDS.txt
+[33md8538382[m Merge pull request #231 from rlinfati/patch-1
+[33m6dd7894b[m add document signing
+[33mf03ea67b[m update EKU
+[33me2a0e411[m Close #210: Make dialog to edit SAN less strict
+[33maf711cc1[m Templates: constify
+[33m63cf6809[m Templates: Fix editing on doubleclick
+[33me9edb754[m ImportMulti: Update pointer management to always free all items
+[33mcbe7709b[m Close #224: Store original path/filename on import
+[33mb60bd022[m Merge pull request #228 from chris2511/issue/github#213
+[33mef5bb98a[m Initialize workingdir with trailing slash
+[33me4f9dd63[m Fix opening new database, while another one is open
+[33m6f8a5437[m Improve Item properties dialog
+[33m0745af1d[m Fix editing revocation entries and generate CRL from that dialog
+[33ma010c091[m Manage Revocations: Fix double click on item to edit
+[33med29b5f3[m Fix typo to start CRL Management
+[33m497e4a61[m Extend Password input by filedescriptor number and automatic man page
+[33m89635900[m Create user-settings directory after creating QApplication
+[33m0340b1c7[m Improve OSX build instructions
+[33m33787e85[m ReqTreeView: signReq() and toRequest() got mixed up. Sort it out
+[33m6474d635[m Improve finding certs/requests with same key
+[33m78d6b5e6[m Check XCA_ABORT_ON_WARNING envvar to abort() on any warning or worse
+[33m21cd74c6[m Add key.png converted from key.xpm, because on OSX xpm does not work
+[33m24009b13[m Fix warnings
+[33m673df16d[m Finish struct option with zeros
+[33m93a53665[m Close #213: configure.ac: add description to AC_DEFINE_UNQUOTED
+[33mef24c00c[m Minor fixes
+[33m17b621cc[m Encapsulate all index.internalPointer() in fromIndex(index)
+[33m9e52d990[m Fix destructor of BioByteArray to not overwrite ro data
+[33m45f834a6[m Move tree-handling from db_x509 class to the base class
+[33maf792141[m Use fromIndex(index) convenience function
+[33m1e544161[m Eliminate the use of "mainwin" in lib/db_*
+[33m7c65a786[m Revamp database management
+[33m93a7c6a9[m Implement option --list-curves and display EC curves
+[33m9b201566[m Improve on cmdline, console, unicode and windows CMD
+[33md1c0970e[m BioByteArray: Add size() method
+[33mb5c9d645[m More native separators when displaying file names
+[33mb2ab7570[m Minor fixxes and constifies
+[33m0f7465dc[m Add convenience function to convert QModelIndex to pki_base *
+[33m03633d7a[m Provide db class name through constructor
+[33ma3344100[m Drop FOR_ALL_pki() makro and use a foreach() loop
+[33m8f46d238[m Replace __ME makro by pki_base QString() operator
+[33m5a647255[m Move item store from db_base into separate class "pki_lookup"
+[33mf889efc4[m Merge branch 'master' into develop
+[33m31d173d2[m Release XCA 2.3.0 done
+[33m79510a24[m Prepare XCA 2.3.0
+[33m1f2429e6[m Avoid filedescriptor leak
+[33mefe283ad[m Fix typo in xca.desktop
+[33m922dfe09[m Update changelog
+[33mf361ea24[m Update README.md
+[33m76e3f867[m Close #191: OID LN differs warning popups at startup
+[33mfa461175[m Fix git.release script
+[33m0ac3b2da[m Improve and fix VERSION_ITERATION
+[33mb13f0c9c[m Add polish translation
+[33m7b6505ff[m Close #189 Database compaction #189
+[33m742bfbaf[m Unify and reformat translations (make trans)
+[33mcfa790ac[m Convert slovak translation to TS
+[33m3e9ad8af[m Update slovak translation
+[33m23ea395e[m Update italian translation
+[33m56528c55[m Merge pull request #185 from nevenko/master
+[33m34b96147[m Merge pull request #187 from burasuzu/JapaneseLanguage
+[33m96c890b7[m Merge pull request #186 from GH3844HL/master
+[33m094e7a8c[m In preparation for the release on April 17, we added Japanese translation and minor changes.
+[33mbfd75717[m Dutch translation for 2.3.0.
+[33m12bbed4d[m Merge commit '1da24ae921b726f5e4e7a295bc7cd661e5f18863'
+[33mb4a50004[m Croatian translation for 2.3.0.
+[33mc00e4b84[m Merge branch 'master' into develop
+[33m1da24ae9[m Convert french translation to TS
+[33m2317dc45[m Merge pull request #184 from monnerat/fr-2.3.0
+[33m05ff5631[m French translation for 2.3.0.
+[33m47f7cfa8[m Update translation
+[33mdef93f80[m Fix typo in URL
+[33m11daf927[m OpenSSL upstream URL layout changed
+[33m6a61ba28[m Update date and version in documentation
+[33m3f6484d3[m update German translation
+[33m5e4310c5[m Update changelog
+[33m7d5bb9ca[m Fix newline handling
+[33m5cb1b45d[m console_write: takes a QByteArray instead of printf()
+[33mdd46ff72[m Fix Copy&Paste'o: Put issuer into issuer property and not subject
+[33mea453d43[m Encapsulate all BIOs in the BioByteArray class
+[33m4d95912d[m Add console_write() to print also on CMD
+[33mb7d3e6a3[m Merge branch 'master' into develop
+[33mfb5ee149[m Improve PKCS11 library loading for portable app
+[33ma9a4c2b2[m remote database: Dont show error if the password was empty
+[33m9d7275ef[m Accept missing "dbhistory" file
+[33mc528c379[m Merge branch 'master' into develop
+[33m4314b0ea[m constify slotid
+[33m500f11c9[m Get rid of filename2bytearray and QString2filename
+[33m2d0980d4[m Use pkcs11_lib_list as model for Options:pkcs11list
+[33m6e18595b[m SearchPkcs11: Show native separator, but use /
+[33m58ede491[m Don't install debugging DLL qwindowsvistastyled.dll
+[33m296ff59f[m PKCS11 library list: Don't get confused by C: when expecting 1:
+[33mbec36532[m QSQL Driver: allow providing options via environment
+[33mdef5f8e7[m Abbreviate "adapt_explicit_subject" to fit into CHAR(20) of settings.key_
+[33m908db59e[m Improve sed regex to also work on MacOSX
+[33m5543ec2f[m Merge branch 'master' into develop
+[33m7d7d88de[m dbhistory/defaultdb: store database names as UTF8
+[33mb41d3220[m Refactor native separators / and \ on windows.
+[33m66a85497[m Improve development version calculation as 4th digit
+[33m7f122488[m Close #182: UI not using Windows native theme in 2.2.1 portable
+[33m096e57ec[m Close #70: cant open ics file in ical on macos mojave
+[33m98e5e0e2[m Improve ExportDialog layout
+[33mbeafd1f8[m Update changelog
+[33m9dbc7714[m handle trailing + in the VERSION properly
+[33md54aa116[m Avoid unused variable warning for OpenSSL 0.9.8
+[33m524aff97[m Load OID lists. Fixup for c89b6aff
+[33m799d3262[m Reactivate translation of x509 expressions
+[33m9bdbecbd[m Improve translation
+[33m4f1103a6[m Close #72: Add checkbox for OCSP staple feature
+[33m9c55caf8[m Merge branch 'master' into develop
+[33m6582c225[m Merge remote-tracking branch 'github/master'
+[33m149ecda6[m Fix index-hierarchy functionality
+[33m37dc9313[m Merge pull request #179 from h3xx/add-icons
+[33m65632f71[m Merge pull request #177 from h3xx/fix-gitignore
+[33me151bbed[m Add set of icons installed in /usr/share/icons
+[33mbc4cacbe[m Use datadir for xpm path
+[33m223ba3f5[m Use DESTDIR instead of destdir when installing
+[33m2b822131[m Fix missing gitignore entries
+[33m852da618[m Fix array access
+[33m8cf138b4[m Drop debugging code
+[33m56abec52[m Fix for Qt4
+[33m92846d6b[m Close #174: Microsoft's PVK RSA private key format
+[33mc4eb23f2[m Close #172 #46: Multiple OCSP Responders
+[33mf244cec5[m Drop functions from legacy database modul
+[33m928ff645[m Improve and fix qDeleteAll()
+[33mb8b368d7[m hashNum() is an unsigned integer
+[33m9183f300[m Add support for validating a keyjob
+[33m919f4f6b[m Parse keytype uppercase to also allow "rsa:2048"
+[33mee7739ba[m Improve detection of commands enforcing no-gui
+[33m7a5936eb[m Replace malloc/free by new/delete
+[33m31088b60[m cmdline help move the asterisk to the front
+[33m0cbf1790[m Close #172 #46: Multiple OCSP Responders
+[33m7babd609[m Drop unneeded pki_base::insert()
+[33m51ffe4e4[m Drop functions from legacy database modul
+[33m9845a00c[m Store default database and recently opened file as UTF8
+[33m00bf676f[m Fix building for Windows
+[33m595cf9a7[m Drop connNewX509() signal and slot
+[33maf3816a7[m Fix building against OpenSSL 0.9.8
+[33m1ccf9da7[m XcaProgress: split into a cmdline and gui class
+[33mdcd2e1a2[m Replace typeid by dynamic_cast where appropriate
+[33mef9b3aff[m Drop superflous includes from header files
+[33m2f917237[m Close #157 Generate and export CRLs from commandline
+[33maacd9ee5[m Make XcaProgress and WAITCURSOR cmdline compatible
+[33ma48ea10e[m Split key generation and data-collection-UI
+[33ma6ec3a93[m Minor fixes without functional changes
+[33mf1fd65c9[m Add keyjob (TBC)
+[33m77519936[m Invent keytype class for mapping type mechanism and name
+[33m241d7e9c[m Move newItem() function from model to view
+[33m3dd34a61[m Move "showPki()" from the model class to the view
+[33md0d387b0[m Directly display the error instead of signaling others
+[33mc3abd640[m Fix certificate assignment importing a CA certificate
+[33mc098b235[m Minor fix. No Message when exiting
+[33m10857e3e[m Support item import from the commandline
+[33maa55a687[m Let pki_pkcs12 and pki_pkcs7 inherit from pki_multi
+[33m1278ef93[m Add self-accounting of items for debugging
+[33m19eafe17[m Improve and fix qDeleteAll()
+[33m98593e74[m Compatibility fixes for QT4 and OpenSSL 0.9.8
+[33m55d16930[m Improve printing of cmdline items
+[33m15440651[m Extend --print and --text functionality
+[33m9dacee6c[m misc/variables.wxi: delete on clean and otherwise ignore generated file
+[33m64ef8565[m Add flag to option list, declaring whether a database is required
+[33mc89b6aff[m Move NID lists for ExtendedKeyUsage and DistinguishedName
+[33mc5208f1c[m Consolidate headers, unguard delete operator
+[33me4d0ab8f[m Refactor Image and icon ressources
+[33m7d0ab9d7[m Add pki_XXX(const pki_XXX*) constructor
+[33mb2a69f35[m Several fixes of previous commit
+[33ma90d7b5b[m Improve password input handling
+[33m30824964[m hashNum() is an unsigned integer
+[33m9da73073[m Create CRL by providing a crljob, describing the parameters
+[33m089c7d39[m Improve console password input
+[33m176c2f81[m Improve password input and handling
+[33mc1ea126e[m linewrap in help
+[33m113a201d[m Separate database from Mainwin for better cmdline support
+[33mbaa09134[m Also test against OpenSSL without EC
+[33ma1fedfaf[m Fix building against OpenSSL without EC.
+[33m176e26e3[m Close #170 xca-portable-2.2.1 cannot change language
+[33m84560e26[m Fix certificate assignment importing a CA certificate
+[33m13ee42f9[m Merge pull request #166 from iddq/master
+[33m8379b516[m Use list initializers for template keys
+[33mde0d3a7b[m Merge pull request #171 from falk-werner/master
+[33mbb7814e9[m added instructions to build and run XCA using docker
+[33m9fcf251a[m feature: enabled matrix build (#1)
+[33med71d32d[m remove makensis, rename build-w32 to build-w64
+[33mdc2ef08f[m Constify db
+[33m63f2ae11[m Constify OpenDB Strings
+[33mfe597278[m Move includes required for FreeBSD
+[33mb9822459[m Close #163: Show key type/size on column of Certificates tab
+[33m302a4640[m Merge pull request #164 from monnerat/lesswarnings
+[33m20b1c4fc[m Resolve gcc 9/10 new warnings.
+[33m5b42c30e[m Merge pull request #162 from madpilot78/FreeBSD-fix
+[33mc3d7af01[m Add includes required in FreeBSD to use in6_addr, AF_INET and AF_INET6.
+[33mae5ab714[m Merge pull request #161 from sheldon-es-MRM/master
+[33m08a17ddd[m Update spanish translation
+[33m91fe56d0[m Release XCA 2.2.1 done
+[33m55976b5d[m Prepare XCA 2.2.1
+[33mbd35c66b[m Prepare release 2.2.1
+[33m4ddeff33[m Check whether a database schema update succeeded
+[33mbf09030d[m Close #159 Opening existing database
+[33m9af52826[m Release XCA 2.2.0 done
+[33m0699d02b[m Prepare XCA 2.2.0
+[33m1d84604a[m Improve windows build targets and release script
+[33md20fc8da[m Prepare documentation for next release
+[33m84dc701b[m Improve configure script
+[33mfc797c09[m Repair xca icon
+[33m9f9a825f[m Fix endless loop when aborting DB open during import
+[33m372b81d3[m Add key name for osslsigncode
+[33m33038d80[m Certum Code Signing certificate received
+[33m9cb74189[m xca.wxs: Improve Startmenu shortcut
+[33m01526338[m Allow double-click xca.bat and examine its output
+[33mf578b27f[m Add missing languages to xca.wxs
+[33mdcf8c7bc[m No need for KEY_WOW64_32KEY registry flag
+[33m258934f8[m Add first shot of installer dialog Image
+[33m4e161586[m Add missing DLL for PosgreSQL DLL
+[33ma12b2e94[m Close #129 Unattended Installation. Switch to MSI installer
+[33ma05349e9[m Portable App: xca.exe path differs from registry install path
+[33m4f8f0715[m Default templates now support OpenVPN
+[33mca138654[m Typo in xca.nsi
+[33m710660e3[m First shot for MSI Installer
+[33m62051eac[m Update changelog and pre-compiled documentation
+[33m580a2fae[m Close #93 Default output folder / Improve Portable App usability
+[33m23a737bb[m Constify getLibExtensions()
+[33mae4445f7[m Improve EC Curve selection for key generation.
+[33m2fbadfc9[m Update Copyright Years to 2020
+[33m953d26c4[m Close #21 Support for ODBC (MSSQL)
+[33mfb8370f9[m Add italian and japanese Qt translations
+[33mf61c2096[m Close #136 Provide 64bit version of xca
+[33mfd09ebe9[m Close #156 secp256k1, secp256r1 and NIST-P256
+[33mae94faeb[m Transfer Key Usage and Extended Key Usage critical flags
+[33m1ea45c8d[m Constify fload() fromPEM_BIO() fromPEMbyteArray()
+[33m8726c8b9[m Improve item loading. Inspired by #153
+[33m9e1f41fc[m Add japanese translation
+[33maa02e353[m Update documentation
+[33m2105fd8a[m Constify table names
+[33m8af8f9c5[m Improve configure for "brew" based Mac OSX builds
+[33m91e3becf[m Update italian translation
+[33m4c152e61[m Update polish translation
+[33m5e54a530[m Update dutch translations
+[33m9aa2525f[m Remove fopen_error() and its last user.
+[33m6061c05b[m We are using C++11 initializer lists
+[33m74e9b02f[m Translate fr.po into xca_fr.ts
+[33m6f3c36cb[m Merge pull request #148 from monnerat/master
+[33m901067bf[m Update french translation.
+[33m3a3e8745[m Obfuscate Mail addresses of language maintainers
+[33ma6a610c2[m Update slovak translation
+[33m657eb130[m Merge pull request #147 from xczh/v2.2.0-zh_CN
+[33meee41ac6[m Update xca_zh_CN.ts
+[33m705b96bc[m Merge pull request #1 from chris2511/master
+[33m4199b8df[m Fix SSH2 public key export
+[33m31943c50[m Update version numbers
+[33md2c3a4b3[m Update german translation
+[33mb2f44883[m Update translations
+[33m43001362[m Improve Shortcuts
+[33m95985adc[m Drop unused private memeber "dh"
+[33maac04418[m Improved language maintainers
+[33m58434678[m Update changelog
+[33m212b3850[m Fix Typo
+[33m91dc8690[m Close #138: Portable Version does not remember paths
+[33med8d825d[m Update dutch language
+[33ma97d680b[m Close #128: MakeFile compatibility with MacPorts
+[33mdffaedc1[m Update german translation
+[33mfa4d3f10[m Update translation files
+[33m4bce90e9[m Close 83: Token selection should not insist on name or serial of the token
+[33m499d04ba[m close #95: Copy mysql and psql windows dll files into portable app
+[33m585e5a75[m Update changelog
+[33m2397ab72[m Close #140: Certificate renewal with option to preserved serial number
+[33mdc2c2b72[m Add Shortcut-key information in the context menu when deleting items
+[33mba00dd6c[m Close #143: Hotkey for import
+[33m7f833a59[m Close #144: Database export has issues with wildcards in internal names
+[33m262c805f[m Fix possible XCA crash
+[33m68c31352[m Sort translations alphabetically
+[33m349f7e6c[m Add dutch translation
+[33m4f9d1ee3[m Fix typo: zh_CH -> zh_CN
+[33m611caa37[m Update changelog
+[33m800eda9b[m Also install qt translations on windows
+[33mbb4b1e3a[m Change chinese language code from "zh" to "zh_CH"
+[33mdaea7465[m Add Chinese translation infrastructure
+[33me7427b5e[m Merge pull request #130 from xczh/master
+[33m9b56eec4[m Add chinese translation maintainer
+[33m7fb51de6[m Merge pull request #125 from cacamille3/master
+[33m6f10546e[m Create xca_zh.ts
+[33m20f8a3a0[m Add italian translation infrastructure
+[33m573ea2b6[m Add italian language
+[33me78af61d[m Update translations
+[33m67d5078f[m Added Keyboard shortcut for Extensions tab in French
+[33m575a4eab[m Fixed typo E%xtensions -> Extensions
+[33ma8637b03[m Merge pull request #87 from Peppernrino/master
+[33m39f358e2[m Merge pull request #84 from chipitsine/master
+[33mb928f251[m Close #119: Rename "PostgreSQL 6 and 7" to just "PostgreSQL"
+[33m80affcfa[m CLose #120: Mark signed a request doesn't work
+[33mc7a0f142[m Close #116: Duplicate extensions erroneously shown
+[33m58669685[m Close #114: SAN - IPv6 address input not working
+[33m5b5c47e0[m Related to #68: Check for a running DH param process when exiting XCA
+[33mb12da23e[m Close #68 Generating large DH params freezes UI
+[33m79441b76[m Change hash algo of PKCS#12 certificate to 3DES SHA1
+[33mb9a8bb1a[m Cleanup: remove unused properties and declarations
+[33m47d4bfac[m Improve SQL sequence when deleting a certificate
+[33m5e3d5e0e[m Cancel creating a new database if database-password dialog is cancelled.
+[33m68ffb63d[m Use the SQL primary key to reference the CRL issuer
+[33me9df5b7c[m Use the SQL primary key to reference the certificate issuer
+[33m4eb7b170[m Do not reference the key by pointer, but by Key Id
+[33mf43e7520[m Support concurrent database access.
+[33mced09958[m Close #91: Change order of "PKCS#11 provider"
+[33m8f3335be[m Improve lib detection
+[33m157b0a3f[m Move Template file reading to QFile API
+[33ma28b943b[m Fix missing ; after return
+[33m1086329e[m Fix for Openssl nno-ec
+[33mfa704001[m Also change File loading from FILE* to QFile
+[33m026d8f8e[m Extend PEM files by human readable information about the item
+[33me86d2b16[m Improve fingerprint layout
+[33ma20afb3f[m Fix Layout of token details
+[33mf55c7fee[m Constify some functions
+[33ma78d9533[m Support ecdsa SSH public keys
+[33m742e1536[m Fix Private key verification
+[33mc26e7a46[m Close #98 Add comment at import/export RSA keys from/to SSH public key
+[33mf56e41b2[m Update OpenSSL version
+[33m3a39e4d0[m Close #101: Finish Rename with Enter shows Property Dialog
+[33m1bc340a0[m Close #104: Also show sha256 digests of public keys
+[33mc41bbf9b[m Close #82: Renew CA ROOT Cert
+[33m19ba3b98[m Image File Compression
+[33mdf61840a[m Update polish translation of dialog boxes
+[33m56687bfc[m Verify imported keys thoroughly
+[33ma46759a9[m Fix workingdir setting
+[33m7d5ecaca[m Make debug output configurable
+[33m1e0ca9f7[m resolve possible null pointer dereference
+[33m776decfd[m Also publish xca-portable.zip
+[33me4fb5f36[m Release XCA 2.1.2 done
+[33m4da10a18[m Prepare XCA 2.1.2
+[33m7950db25[m Update release script
+[33m00fbb85c[m Improve on portable App and registry access
+[33m91faa1b6[m Improve portable App
+[33mccb95684[m Update cheangelog
+[33m3efb185f[m Merge pull request #81 from ViniciusOcker/master
+[33m03655cdd[m Update portuguese brazilian
+[33m736dac62[m Close #40 macOS: Crash after xca v2.0.1 quit
+[33m73452bfa[m Close #37: XCA 2: EVP_DecryptFinal_ex:bad decrypt
+[33mf260c945[m Add polish and portuguese to xca.pro
+[33m7b7e2644[m Close #74: Exiting XCA 2.1.1 corrupts database
+[33meba8be37[m Make PKCS11 libs, working dir and main-window size host-dependent
+[33m72492fab[m Merge pull request #79 from ViniciusOcker/master
+[33m3735320e[m Update in portuguese language in brazil
+[33m69c4689b[m Setup.exe: Install QT translations for polish, portuguese and slovak
+[33m00bd36f1[m Support for XCA as portable App
+[33m6f8ca8dd[m Improve DN translation notation
+[33m1953f7f1[m Improve defaultdb / defaultlang handling. No functional change
+[33med53777e[m Fix compiler warnings
+[33mc965c01a[m Add Miguel Romera <mrmsoftdonation@gmail.com> as new spanish maintainer
+[33m6ce64fd3[m Update spanish translation.
+[33mba59e141[m Add Vinicius Ocker as portugese language maintainer
+[33m9e90d9b8[m Merge pull request #78 from ViniciusOcker/master
+[33me018bc60[m Related to #69: MacOSX: Build failure if "@rpath" contains local directory
+[33m4177b667[m Update lang/xca_pt_BR.ts
+[33m74663f0c[m Update portuguese in brazil
+[33m54e07be3[m add portuguese in brazil
+[33mc238d0a8[m Close #69 Library not loaded: @rpath/... -> Rebuild DMG
+[33m391d2fae[m Updated polish translation
+[33m96151564[m Activate polish language in the language menu
+[33m53511ad1[m Initially add polish language
+[33mb139ffd4[m Fix Mac volume name during build
+[33m3ed98fa4[m Related to #60: Fix MacOSX 2.1.1 binary
+[33m1e3a3733[m Release XCA 2.1.1 done
+[33m918e99e3[m Prepare XCA 2.1.1
+[33m04b94370[m Update changelog
+[33m18672fae[m Convert workingdir separators to native separators
+[33m0ccd5594[m Use QFile for "dbhistory" and "defaultdb"
+[33mc40e05b5[m Update OpenSSL version to 1.1.1 for Windows and MacOSX
+[33meb5db6f0[m Related #49: Delete misc/Info.plist only with distclean
+[33m5b0a57ec[m Update documentation
+[33m3b2b3799[m Use OpenSSL 1.1.0i
+[33me4f8f00b[m Inspired by #55: Allow manual override of CSR signed/unsigned mark
+[33m2fc27224[m Close #56: Duplicate Serials after Upgrade 2.1.0
+[33m410142f3[m Close #57: SAN IP not working in 2.1.0
+[33mc9cdb5d6[m Close #55: Calculate "CSR signed" information from legacy database
+[33m340b53f4[m Close #55: Add Certificate counter row for requests.
+[33m8bc6299f[m Fix typo in german translation
+[33m680e0cd3[m Fix slovak translation by adding "X-Qt-Contexts: true"
+[33mb3726be7[m Remove misc/Info.plist in clean target
+[33mb133537b[m Update libtool version
+[33mf4646a65[m Close #50: Hang while importing 1.4.1 database into 2.1.0
+[33m4bc006af[m Release XCA 2.1.0 done
+[33m37710840[m Prepare XCA 2.1.0
+[33mca4fd62b[m Fix typo
+[33md54c8d3b[m update changelog
+[33m4ca33d6b[m Extend maximum width of settings(value) to 10000
+[33m101e62f1[m Partially fix #30: XCA OSX backward compatibility
+[33m3d4c6cfc[m Add sanity check when loading table-header information
+[33m2682edac[m Close #48 The SKI tickbox isn't generating an SKI extension for CSRs
+[33m4e68d404[m Revert "Extend #36: Automatic X509v3 extensions for CSR"
+[33mc74ce35f[m Update precompiled documentation
+[33ma1185484[m Update .gitignore and xca.pro
+[33mf1dc9b86[m Extend #36: Automatic X509v3 extensions for CSR
+[33mc88b0b7d[m Improve fix for #35: Configurable size of serial number.
+[33mc1189b0f[m Add private key icon to the key name
+[33m9691496a[m Oid loading: catch OID creation errors
+[33ma8f54c82[m Refactor OID loading
+[33m07cd6385[m Use QFile and QString for NID-list reading
+[33m1e79954e[m Add updated language files (TS) after PO translation
+[33mc51b4ed2[m Update french translation
+[33m0a0159d8[m Updated slovak translation
+[33mbdfa10d4[m Close #45: Unable to view Public Key
+[33md32d14ee[m misc/preamble.txt: Fix previous commit: remove empty line
+[33ma4ab9846[m Close #47: macOS: preference directory does not match one in docs/oids.txt
+[33m2181f4d7[m Update changelog
+[33m0e4197c0[m Merge pull request #44 from nevenko/master
+[33m73f64f62[m Updated croatian translation file
+[33md5305d33[m Check all dates regularily whether a "view" update is neccessary
+[33m1ee1c47e[m Update german translation
+[33mbd0def22[m Update translation
+[33m2f8c25ba[m Replace TR() by QObject::tr() to get catched by lupdate
+[33mdc519920[m Make all dates in columns fancy, still sorting correctly by age
+[33macea9e5c[m Fix translation of dates
+[33m96d8c5cf[m Generalize handling of DateTime columns
+[33mb10b4f7a[m Inspired by #42: display insertion date relative
+[33m5ff5d77d[m Update changelog and xca.sgml
+[33mb32e9744[m Fix duplicate entries in remote database type selection
+[33mfa41eb6d[m Close #41: Generate CRL option 'Midnight' not working
+[33m3c87ff1e[m Remove code duplication with CSR information
+[33m5703ad85[m Separate the internal name from distinguished name
+[33m15d33fdc[m Make the dynamic DN entry adaption configurable.
+[33mefa29c0e[m Inspired by #39: Dynamically adjust explicit DN entries
+[33m2a0f96e8[m Close #39: Subject entries shuffled
+[33m7bdeee1c[m Update changelog
+[33m22966937[m Close #36: Support adding CN to X509v3 SAN automatically
+[33m4b237510[m Transform regexp based IP validator into its own QValidator class
+[33mf0e6dc1f[m Close #35: Configurable size of serial number.
+[33mefd3bff7[m Add missing break in switch
+[33m15b4d759[m VERSION/changelog update
+[33m9e3fed11[m Close #34: Improve Mac OSX installation
+[33m0c8df14b[m Close #27: Configurable certificate expiry warning threshold
+[33mdc36728d[m Generate calender (.ics) files for certificate and CRL expiries
+[33mc1c3c43c[m Improve release and publish scripts
+[33m2a94b3aa[m Release 2.0.1 done
+[33m936bb834[m Prepare XCA 2.0.1
+[33m9c49258f[m Use correct Info.plist file
+[33m39f57938[m Update changelog and documentation. Delete misc/Info.plist
+[33m9b1540a2[m Close #32: Version field contains "Created by Qt/QMake" on MacOSX
+[33ma6c3ce85[m Merge pull request #33 from PF4Public/russian_translation
+[33md3838c8a[m New strings and revised old strings in russian localization
+[33mc65d9e59[m Close #31: Closing certificate details window toggles tree folding
+[33mb362ae35[m Const-ify dbheader in column_data() and getIcon()
+[33m84fcc961[m Close #25: Certificates are no longer coloured
+[33m8d64db6b[m Const-ify remFromCont()
+[33mb74642fa[m Const-ify QSqlRecord of restoreSql()

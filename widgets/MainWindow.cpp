@@ -36,6 +36,8 @@
 #include "lib/dhgen.h"
 #include "lib/load_obj.h"
 #include "lib/pki_pkcs12.h"
+#include "lib/pki_x509.h"
+#include "lib/db_x509.h"
 
 #include "XcaDialog.h"
 #include "XcaWarning.h"
@@ -89,8 +91,7 @@ MainWindow::MainWindow() : QMainWindow()
 	OpenDb::checkSqLite();
 	initResolver();
 
-	wdList << keyButtons << reqButtons << certButtons <<
-		tempButtons <<	crlButtons;
+	wdList << keyButtons;
 
 	OpenDb::initDatabases();
 
@@ -117,12 +118,8 @@ MainWindow::MainWindow() : QMainWindow()
 	searchEdit->setPlaceholderText(tr("Search"));
 
 	keyView->setIconSize(QPixmap(":keyIco").size());
-	reqView->setIconSize(QPixmap(":reqIco").size());
-	certView->setIconSize(QPixmap(":validcertIco").size());
-	tempView->setIconSize(QPixmap(":templateIco").size());
-	crlView->setIconSize(QPixmap(":crlIco").size());
 
-	views << keyView << reqView << certView << crlView << tempView;
+	views << keyView;
 
 	pki_base::setupColors(palette());
 
@@ -132,6 +129,7 @@ MainWindow::MainWindow() : QMainWindow()
 	XcaProgress::setGui(new XcaProgressGui(this));
 	xcaWarning::setGui(new xcaWarningGui());
 	PwDialogCore::setGui(new PwDialogUI());
+
 }
 
 void MainWindow::dropEvent(QDropEvent *event)
@@ -202,11 +200,6 @@ void MainWindow::setItemEnabled(bool enable)
 void MainWindow::init_images()
 {
 	bigKey->setPixmap(QPixmap(":keyImg"));
-	bigCsr->setPixmap(QPixmap(":csrImg"));
-	bigCert->setPixmap(QPixmap(":certImg"));
-	bigTemp->setPixmap(QPixmap(":tempImg"));
-	bigRev->setPixmap(QPixmap(":revImg"));
-	setWindowIcon(QPixmap(":appIco"));
 }
 
 void MainWindow::loadPem()
@@ -349,100 +342,75 @@ void MainWindow::manageToken()
 	pkcs11 p11;
 	slotid slot;
 	pki_scard *card = NULL;
-	pki_x509 *cert = NULL;
 	ImportMulti *dlgi = NULL;
-
-	enum logintype { none, userlogin, sologin } login = none;
-
+	
 	if (!pkcs11::libraries.loaded())
 		return;
-
+	
 	try {
 		if (!p11.selectToken(&slot, this))
 			return;
 
 		tkInfo ti(p11.tokenInfo(slot));
-
+		
 		ImportMulti *dlgi = new ImportMulti(this);
-
-		while (true) {
-			dlgi->tokenInfo(slot);
-			QList<CK_OBJECT_HANDLE> objects;
-
-			QList<CK_MECHANISM_TYPE> ml = p11.mechanismList(slot);
-			if (ml.count() == 0)
-				ml << CKM_SHA1_RSA_PKCS;
-			pk11_attlist atts(pk11_attr_ulong(CKA_CLASS,
-					CKO_PUBLIC_KEY));
-
-			p11.startSession(slot);
-			p11.getRandom();
-			if (login != none) {
-				if (p11.tokenLogin(ti.label(), login == sologin).isNull())
-					break;
+		dlgi->tokenInfo(slot);
+		
+		QList<CK_OBJECT_HANDLE> objects;
+		QList<CK_MECHANISM_TYPE> ml = p11.mechanismList(slot);
+		if (ml.count() == 0)
+			ml << CKM_SHA1_RSA_PKCS;
+		
+		pk11_attlist atts(pk11_attr_ulong(CKA_CLASS, CKO_PRIVATE_KEY));
+		p11.startSession(slot);
+		p11.getRandom();
+		
+		// 获取私钥
+		objects = p11.objectList(atts);
+		for (int j=0; j< objects.count(); j++) {
+			card = new pki_scard("");
+			try {
+				card->load_token(p11, objects[j]);
+				card->setMech_list(ml);
+				dlgi->addItem(card);
+			} catch (errorEx &err) {
+				XCA_ERROR(err);
+				delete card;
 			}
-			objects = p11.objectList(atts);
-
-			for (int j=0; j< objects.count(); j++) {
-				card = new pki_scard("");
-				try {
-					card->load_token(p11, objects[j]);
-					card->setMech_list(ml);
-					dlgi->addItem(card);
-				} catch (errorEx &err) {
-					XCA_ERROR(err);
-					delete card;
-				}
-				card = NULL;
-			}
-			atts.reset();
-			atts << pk11_attr_ulong(CKA_CLASS, CKO_CERTIFICATE) <<
-				pk11_attr_ulong(CKA_CERTIFICATE_TYPE,CKC_X_509);
-			objects = p11.objectList(atts);
-
-			for (int j=0; j< objects.count(); j++) {
-				cert = new pki_x509("");
-				try {
-					cert->load_token(p11, objects[j]);
-					dlgi->addItem(cert);
-				} catch (errorEx &err) {
-					XCA_ERROR(err);
-					delete cert;
-				}
-				cert = NULL;
-			}
-			if (dlgi->entries() == 0) {
-				p11.closeSession(slot);
-				QString txt = tr("The token '%1' did not contain any keys or certificates")
-								.arg(ti.label());
-				xcaWarningBox msg(this, txt);
-				msg.addButton(QMessageBox::Ok);
-				msg.addButton(QMessageBox::Retry, tr("Retry with PIN"));
-				msg.addButton(QMessageBox::Apply, tr("Retry with SO PIN"));
-				switch (msg.exec())
-				{
-					case QMessageBox::Retry:
-						login = userlogin;
-						continue;
-					case QMessageBox::Apply:
-						login = sologin;
-						continue;
-					case QMessageBox::Ok:
-						// fall
-					default:
-						break;
-				}
-			} else {
-				p11.closeSession(slot);
-				dlgi->execute(true);
-			}
-			break;
+			card = NULL;
 		}
-	} catch (errorEx &err) {
+		
+		// 获取公钥
+		atts.reset();
+		atts << pk11_attr_ulong(CKA_CLASS, CKO_PUBLIC_KEY);
+		objects = p11.objectList(atts);
+		
+		for (int j=0; j< objects.count(); j++) {
+			card = new pki_scard("");
+			try {
+				card->load_token(p11, objects[j]);
+				card->setMech_list(ml);
+				dlgi->addItem(card);
+			} catch (errorEx &err) {
+				XCA_ERROR(err);
+				delete card;
+			}
+			card = NULL;
+		}
+		
+		if (dlgi->entries() == 0) {
+			p11.closeSession(slot);
+			QString txt = tr("The token '%1' did not contain any keys").arg(ti.label());
+			XCA_INFO(txt);
+		} else {
+			p11.closeSession(slot);
+			dlgi->execute(true);
+		}
+	}
+	catch (errorEx &err) {
 		XCA_ERROR(err);
 	}
 	delete card;
-	delete cert;
 	delete dlgi;
 }
 
@@ -655,19 +623,10 @@ enum open_result MainWindow::setup_open_database()
 		}
 	}
 	keyView->setModel(Database.model<db_key>());
-	reqView->setModel(Database.model<db_x509req>());
-	certView->setModel(Database.model<db_x509>());
-	tempView->setModel(Database.model<db_temp>());
-	crlView->setModel(Database.model<db_crl>());
 
 	searchEdit->setText("");
 	searchEdit->show();
 	statusBar()->addWidget(searchEdit, 1);
-
-	connect(tempView, SIGNAL(newCert(pki_temp *)),
-		Database.model<db_x509>(), SLOT(newCert(pki_temp *)));
-	connect(tempView, SIGNAL(newReq(pki_temp *)),
-		Database.model<db_x509req>(), SLOT(newItem(pki_temp *)));
 
 	return pw_ok;
 }
@@ -721,11 +680,10 @@ void MainWindow::exportIndexHierarchy()
 
 void MainWindow::exportIndex(const QString &fname, bool hierarchy) const
 {
-	qDebug() << fname << hierarchy;
-	if (fname.isEmpty() || !Database.isOpen())
-		return;
-	db_x509 *certs = Database.model<db_x509>();
-	certs->writeIndex(fname, hierarchy);
+	// 此功能已禁用
+	(void)fname;
+	(void)hierarchy;
+	XCA_WARN(tr("Export Certificate Index functionality is disabled in this build."));
 }
 
 void MainWindow::generateDHparamDone()

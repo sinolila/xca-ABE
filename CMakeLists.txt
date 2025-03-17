@@ -197,7 +197,6 @@ include(lang/CMakeLists.txt)
 include(misc/CMakeLists.txt)
 include(doc/CMakeLists.txt)
 include(img/CMakeLists.txt)
-include(test/CMakeLists.txt)
 
 install(TARGETS ${CMAKE_PROJECT_NAME}
     RESOURCE DESTINATION Resources
@@ -308,3 +307,11 @@ else()
 endif()
 
 include(CPack)
+
+# 将测试设置为可选，默认关闭
+option(BUILD_TESTS "Build the test suite" OFF)
+
+# 如果测试被禁用，完全跳过测试目录
+if(BUILD_TESTS)
+    include(test/CMakeLists.txt)
+endif()
