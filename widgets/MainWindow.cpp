@@ -89,8 +89,7 @@ MainWindow::MainWindow() : QMainWindow()
 	OpenDb::checkSqLite();
 	initResolver();
 
-	wdList << keyButtons << reqButtons << certButtons <<
-		tempButtons <<	crlButtons;
+	wdList << identkeyButtons<<keyButtons << reqButtons << certButtons << crlButtons;
 
 	OpenDb::initDatabases();
 
@@ -116,13 +115,13 @@ MainWindow::MainWindow() : QMainWindow()
 	searchEdit = new QLineEdit();
 	searchEdit->setPlaceholderText(tr("Search"));
 
+	identkeyView->setIconSize(QPixmap(":keyIco").size());
 	keyView->setIconSize(QPixmap(":keyIco").size());
 	reqView->setIconSize(QPixmap(":reqIco").size());
 	certView->setIconSize(QPixmap(":validcertIco").size());
-	tempView->setIconSize(QPixmap(":templateIco").size());
 	crlView->setIconSize(QPixmap(":crlIco").size());
 
-	views << keyView << reqView << certView << crlView << tempView;
+	views <<identkeyView<< keyView << reqView << certView << crlView;
 
 	pki_base::setupColors(palette());
 
@@ -201,10 +200,10 @@ void MainWindow::setItemEnabled(bool enable)
 
 void MainWindow::init_images()
 {
+	bigIdnetKey->setPixmap(QPixmap(":keyImg"));
 	bigKey->setPixmap(QPixmap(":keyImg"));
 	bigCsr->setPixmap(QPixmap(":csrImg"));
 	bigCert->setPixmap(QPixmap(":certImg"));
-	bigTemp->setPixmap(QPixmap(":tempImg"));
 	bigRev->setPixmap(QPixmap(":revImg"));
 	setWindowIcon(QPixmap(":appIco"));
 }
@@ -654,20 +653,15 @@ enum open_result MainWindow::setup_open_database()
 				break;
 		}
 	}
+	identkeyView->setModel(Database.model<db_key>());
 	keyView->setModel(Database.model<db_key>());
 	reqView->setModel(Database.model<db_x509req>());
 	certView->setModel(Database.model<db_x509>());
-	tempView->setModel(Database.model<db_temp>());
 	crlView->setModel(Database.model<db_crl>());
 
 	searchEdit->setText("");
 	searchEdit->show();
 	statusBar()->addWidget(searchEdit, 1);
-
-	connect(tempView, SIGNAL(newCert(pki_temp *)),
-		Database.model<db_x509>(), SLOT(newCert(pki_temp *)));
-	connect(tempView, SIGNAL(newReq(pki_temp *)),
-		Database.model<db_x509req>(), SLOT(newItem(pki_temp *)));
 
 	return pw_ok;
 }

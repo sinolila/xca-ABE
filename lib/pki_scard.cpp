@@ -846,3 +846,37 @@ void pki_scard::updateLabel(QString label)
 	AffectedItems(sqlItemId);
 	TransCommit();
 }
+
+// #ifdef EVP_PKEY_SM9
+// bool pki_scard::generateSM9SignMasterKey()
+// {
+//     if (!prepare_card())
+//         return false;
+    
+//     EVP_PKEY *pkey = SM9_SIGN_MASTER_KEY_generate_key();
+//     if (!pkey)
+//         return false;
+    
+//     setKey(pkey);
+//     EVP_PKEY_free(pkey);
+    
+//     return true;
+// }
+
+// bool pki_scard::generateSM9EncMasterKey()
+// {
+//     if (!prepare_card())
+//         return false;
+    
+//     EVP_PKEY *pkey = SM9_ENC_MASTER_KEY_generate_key();
+//     if (!pkey)
+//         return false;
+    
+//     setKey(pkey);
+//     EVP_PKEY_free(pkey);
+    
+//     return true;
+// }
+
+// // ����SM9��ع���...
+// #endif

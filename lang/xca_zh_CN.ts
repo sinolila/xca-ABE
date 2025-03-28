@@ -1183,6 +1183,51 @@ This will delete the key &apos;%1&apos; and make it unexportable</source>
 <context>
     <name>MainWindow</name>
     <message>
+    <location filename="../ui/MainWindow.ui" line="+25"/>
+    <source>Identifier Keys</source>
+    <translation>标识密钥</translation>
+</message>
+<message>
+    <location line="+24"/>
+    <source>&amp;New Key</source>
+    <translation>创建密钥</translation>
+</message>
+<message>
+    <location line="+7"/>
+    <location line="+99"/>
+    <location line="+86"/>
+    <location line="+128"/>
+    <location line="+65"/>
+    <source>&amp;Export</source>
+    <translation>导出</translation>
+</message>
+<message>
+    <location line="-371"/>
+    <location line="+99"/>
+    <location line="+86"/>
+    <location line="+114"/>
+    <location line="+79"/>
+    <source>&amp;Import</source>
+    <translation>导入</translation>
+</message>
+<message>
+    <location line="+7"/>
+    <location line="+92"/>
+    <location line="+86"/>
+    <location line="+193"/>
+    <source>&amp;Show Details</source>
+    <translation>查看详情</translation>
+</message>
+<message>
+    <location line="-364"/>
+    <location line="+92"/>
+    <location line="+86"/>
+    <location line="+93"/>
+    <location line="+100"/>
+    <source>&amp;Delete</source>
+    <translation>删除</translation>
+</message>
+    <message>
         <location filename="../ui/MainWindow.ui" line="+25"/>
         <source>Private Keys</source>
         <translation>私钥</translation>

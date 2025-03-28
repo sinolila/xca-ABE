@@ -27,6 +27,12 @@
 
 extern builtin_curves builtinCurves;
 
+// 添加SM9密钥类型常量定义
+#ifndef EVP_PKEY_SM9
+#define EVP_PKEY_SM9_SIGN 406
+#define EVP_PKEY_SM9_ENC  407
+#endif
+
 class keytype
 {
   public:
@@ -42,6 +48,10 @@ class keytype
 				true, false),
 #ifdef EVP_PKEY_ED25519
 			keytype(EVP_PKEY_ED25519, "ED25519", CKM_VENDOR_DEFINED, false, false),
+#endif
+#ifdef EVP_PKEY_SM9
+			keytype(EVP_PKEY_SM9_SIGN, "SM9_SIGN", CKM_VENDOR_DEFINED, false, false),
+			keytype(EVP_PKEY_SM9_ENC, "SM9_ENC", CKM_VENDOR_DEFINED, false, false),
 #endif
 #endif
 		};
@@ -64,6 +74,10 @@ class keytype
 		return
 #ifdef EVP_PKEY_ED25519
 			type == EVP_PKEY_ED25519 ? QString("PRIVATE KEY") :
+#endif
+#ifdef EVP_PKEY_SM9
+			type == EVP_PKEY_SM9_SIGN ? QString("SM9 SIGN PRIVATE KEY") :
+			type == EVP_PKEY_SM9_ENC ? QString("SM9 ENC PRIVATE KEY") :
 #endif
 				QString("%1 PRIVATE KEY").arg(name);
 	}
@@ -254,6 +268,12 @@ class pki_key: public pki_base
 		QByteArray ed25519PubKey() const;
 		QByteArray ed25519PrivKey(const EVP_PKEY *pkey) const;
 		BIGNUM *ecPubKeyBN() const;
+#ifdef EVP_PKEY_SM9
+		QByteArray sm9SignMasterPubKey() const;
+		QByteArray sm9EncMasterPubKey() const;
+		QByteArray sm9SignPrivKey() const;
+		QByteArray sm9EncPrivKey() const;
+#endif
 #endif
 		void d2i(QByteArray &ba);
 		void d2i_old(QByteArray &ba, int type);

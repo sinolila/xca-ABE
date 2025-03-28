@@ -125,6 +125,7 @@ if (${QT_VERSION} VERSION_LESS 5.10.0)
 endif()
 message(STATUS "Using ${QT} with version ${QT_VERSION}")
 
+
 get_target_property(qmake_executable ${QT}::qmake IMPORTED_LOCATION)
 get_filename_component(_qt_bin_dir "${qmake_executable}" DIRECTORY)
 

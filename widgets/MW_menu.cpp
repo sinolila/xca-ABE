@@ -146,7 +146,6 @@ void MainWindow::init_menu()
 	import->addAction(tr("Certificates"), certView, SLOT(load()) );
 	import->addAction(tr("PKCS#12"), certView, SLOT(loadPKCS12()) );
 	import->addAction(tr("PKCS#7"), certView, SLOT(loadPKCS7()) );
-	import->addAction(tr("Template"), tempView, SLOT(load()) );
 	import->addAction(tr("Revocation list"), crlView, SLOT(load()));
 	import->addAction(tr("PEM file"), this, SLOT(loadPem()) );
 	import->addAction(tr("Paste PEM file"), this, SLOT(pastePem()))->

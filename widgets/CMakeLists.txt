@@ -27,6 +27,8 @@ MainWindow.cpp		X509SuperTreeView.h	validity.cpp
 MainWindow.h		XcaApplication.cpp	validity.h
 pkcs12EncBox.h          XcaDetail.h
 pkcs12EncBox.cpp        XcaDetail.cpp
+IdentKeyTreeView.cpp    IdentKeyTreeView.h
+NewIdentKey.cpp     NewIdentKey.h
 )
 
 list(TRANSFORM xca_sources PREPEND ${PROJECT_SOURCE_DIR}/widgets/)
