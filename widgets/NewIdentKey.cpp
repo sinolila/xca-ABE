@@ -98,102 +98,94 @@ NewIdentKey::NewIdentKey(QWidget *parent, const QString &name)
 	if (!name.isEmpty())
 		keyDesc->setText(name);
 
-	keyLength->setEditable(true);
-	foreach (int size, sizeList)
-		keyLength->addItem(QString("%1 bit").arg(size));
+	// 设置为不可见，因为IBC不需要这些控件
+	keyLength->setVisible(false);
+	keySizeLabel->setVisible(false);
+	
+	// 保留曲线选择框，因为IBC需要选择曲线
+	curveBox->setVisible(true);
+	curveLabel->setVisible(true);
+	curveLabel->setText(tr("Curve name"));
 
-	foreach (const keytype t, keytype::types())
-		keytypes << keyListItem(t);
+	// 只添加IBC相关曲线，不依赖通用EC曲线
+	populateIBCParameters();
+	
+	// 只添加IBC类型
+	foreach (const keytype t, keytype::types()) {
+		if (t.type == EVP_PKEY_IBC) {
+			keytypes << keyListItem(t);
+		}
+	}
 
-	updateCurves();
-	keyLength->setEditText(QString("%1 bit").arg(keyjob::defaultjob.size));
 	keyDesc->setFocus();
+	
 	if (pkcs11::libraries.loaded()) try {
 		pkcs11 p11;
 		p11_slots = p11.getSlotList();
 
 		foreach(slotid slot, p11_slots) {
 			QList<CK_MECHANISM_TYPE> ml = p11.mechanismList(slot);
-			foreach(keytype t, keytype::types())
-				if (ml.contains(t.mech))
-					keytypes << keyListItem(&p11, slot,
-								t.mech);
+			// 只添加IBC相关的Token机制
+			foreach(keytype t, keytype::types()) {
+				if (t.type == EVP_PKEY_IBC && ml.contains(t.mech))
+					keytypes << keyListItem(&p11, slot, t.mech);
+			}
 		}
 	} catch (errorEx &) {
 		p11_slots.clear();
 	}
+	
 	for (int i=0; i<keytypes.count(); i++) {
 		QVariant q;
 		q.setValue(keytypes[i]);
 		keyType->addItem(keytypes[i].printname, q);
 		if (!keytypes[i].card &&
-		    keytypes[i].type() == keyjob::defaultjob.ktype.type)
+		    keytypes[i].type() == EVP_PKEY_IBC)
 		{
 			keyType->setCurrentIndex(i);
 		}
 	}
+	
+	// 如果没有IBC选项，添加一个默认的
+	if (keyType->count() == 0) {
+		foreach (const keytype t, keytype::types()) {
+			if (t.type == EVP_PKEY_IBC) {
+				QVariant q;
+				keyListItem item(t);
+				q.setValue(item);
+				keyType->addItem(item.printname, q);
+				break;
+			}
+		}
+	}
+	
 	buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Create"));
 }
 
-void NewIdentKey::addCurveBoxCurves(const QList<builtin_curve> &curves)
+// 添加新方法，专门用于填充IBC参数（替代updateCurves）
+void NewIdentKey::populateIBCParameters()
 {
-	foreach(builtin_curve curve, curves) {
-		QString sn(OBJ_nid2sn(curve.nid));
-		QString p, comment = curve.comment;
-
-		if (comment.isEmpty())
-			comment = "---";
-		p = sn + ": " + comment;
-		curveBox->addItem(sn + ": " + comment, curve.nid);
-	}
-}
-
-void NewIdentKey::updateCurves(unsigned min, unsigned max, unsigned long ec_flags)
-{
-#ifndef OPENSSL_NO_EC
-	QList<builtin_curve> curve_rfc5480, curve_x962, curve_other;
-
-	foreach(builtin_curve curve, builtinCurves) {
-		const char *sn = OBJ_nid2sn(curve.nid);
-
-		if (!sn || curve.order_size < min || curve.order_size > max)
-			continue;
-		if (ec_flags && (curve.type & ec_flags) == 0)
-			continue;
-		switch (curve.flags) {
-			case CURVE_RFC5480: curve_rfc5480  << curve; break;
-			case CURVE_X962:    curve_x962     << curve; break;
-			case CURVE_OTHER:   curve_other    << curve; break;
-		}
-	}
 	curveBox->clear();
-	addCurveBoxCurves(curve_rfc5480);
-	curveBox->insertSeparator(curveBox->count());
-	addCurveBoxCurves(curve_x962);
-	curveBox->insertSeparator(curveBox->count());
-	addCurveBoxCurves(curve_other);
-
-	int default_index = curveBox->findData(
-				QVariant(keyjob::defaultjob.ec_nid));
-	curveBox->setCurrentIndex(default_index == -1 ? 0 : default_index);
-#else
-	(void)min; (void)max; (void)ec_flags;
-#endif
+	
+	// 添加IBC可用的参数/曲线
+	// 这可以是预定义的，而不依赖于EC曲线库
+	curveBox->addItem("SM9", 0);  // 使用自定义ID或适当的NID
+	curveBox->addItem("IBE-Boneh-Franklin", 1);
+	// 可以添加更多IBC方案
+	
+	curveBox->setCurrentIndex(0);  // 默认选择第一个
 }
 
 void NewIdentKey::on_keyType_currentIndexChanged(int idx)
 {
 	keyListItem ki = keyType->itemData(idx).value<keyListItem>();
-
-	curveBox->setVisible(ki.ktype.curve);
-	curveLabel->setVisible(ki.ktype.curve);
-	keySizeLabel->setVisible(ki.ktype.length);
-	keyLength->setVisible(ki.ktype.length);
-
 	rememberDefault->setEnabled(!ki.card);
-	if (ki.ktype.curve && ki.card) {
-		updateCurves(ki.minKeySize, ki.maxKeySize, ki.ec_flags);
-	}
+	
+	// IBC类型始终显示参数选择框，但隐藏密钥长度选择框
+	curveBox->setVisible(true);
+	curveLabel->setVisible(true);
+	keySizeLabel->setVisible(false);
+	keyLength->setVisible(false);
 }
 
 keyjob NewIdentKey::getKeyJob() const
@@ -202,14 +194,10 @@ keyjob NewIdentKey::getKeyJob() const
 	keyListItem selected = keyType->itemData(keyType->currentIndex())
 						.value<keyListItem>();
 	job.ktype = selected.ktype;
-	if (job.isEC()) {
-		int idx = curveBox->currentIndex();
-		job.ec_nid = curveBox->itemData(idx).toInt();
-	} else {
-		QString size = keyLength->currentText();
-		size.replace(QRegularExpression("[^0-9]"), "");
-		job.size = size.toInt();
-	}
+	
+	// 设置IBC参数（这里假设使用ec_nid来存储IBC参数ID）
+	job.ec_nid = curveBox->currentData().toInt();
+	
 	job.slot = selected.slot;
 	return job;
 }

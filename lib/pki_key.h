@@ -33,6 +33,11 @@ extern builtin_curves builtinCurves;
 #define EVP_PKEY_SM9_ENC  407
 #endif
 
+// 添加IBC密钥类型常量定义
+#ifndef EVP_PKEY_IBC
+#define EVP_PKEY_IBC 408
+#endif
+
 class keytype
 {
   public:
@@ -46,14 +51,17 @@ class keytype
 #ifndef OPENSSL_NO_EC
 			keytype(EVP_PKEY_EC, "EC", CKM_EC_KEY_PAIR_GEN,
 				true, false),
+#endif
 #ifdef EVP_PKEY_ED25519
 			keytype(EVP_PKEY_ED25519, "ED25519", CKM_VENDOR_DEFINED, false, false),
 #endif
 #ifdef EVP_PKEY_SM9
-			keytype(EVP_PKEY_SM9_SIGN, "SM9_SIGN", CKM_VENDOR_DEFINED, false, false),
-			keytype(EVP_PKEY_SM9_ENC, "SM9_ENC", CKM_VENDOR_DEFINED, false, false),
+			keytype(EVP_PKEY_IBC, "IBC", CKM_VENDOR_DEFINED, true, false),
+			// keytype(EVP_PKEY_SM9_SIGN, "SM9_SIGN", CKM_VENDOR_DEFINED, false, false),
+			// keytype(EVP_PKEY_SM9_ENC, "SM9_ENC", CKM_VENDOR_DEFINED, false, false),
 #endif
-#endif
+
+
 		};
 	}
 	int type{};
@@ -65,7 +73,7 @@ class keytype
 			: type(t), name(n), mech(m), curve(c), length(l) { }
 	keytype() : type(-1), name(QString()), mech(0),
 			curve(false), length(true) { }
-	bool isValid()
+	bool isValid() const
 	{
 		return type != -1;
 	}
@@ -79,6 +87,7 @@ class keytype
 			type == EVP_PKEY_SM9_SIGN ? QString("SM9 SIGN PRIVATE KEY") :
 			type == EVP_PKEY_SM9_ENC ? QString("SM9 ENC PRIVATE KEY") :
 #endif
+			type == EVP_PKEY_IBC ? QString("IBC PRIVATE KEY") :
 				QString("%1 PRIVATE KEY").arg(name);
 	}
 	static const keytype byType(int type)
@@ -135,7 +144,7 @@ class keyjob
 		ktype = keytype::byName(sl[0]);
 		size = DEFAULT_KEY_LENGTH;
 		ec_nid = NID_undef;
-		if (isEC())
+		if (isEC() || isIBC())
 			ec_nid = OBJ_txt2nid(sl[1].toLatin1());
 		else if (!isED25519())
 			size = sl[1].toInt();
@@ -146,7 +155,7 @@ class keyjob
 	{
 		if (isED25519())
 			return ktype.name;
-		return QString("%1:%2").arg(ktype.name) .arg(isEC() ?
+		return QString("%1:%2").arg(ktype.name) .arg(isEC() || isIBC() ?
 					OBJ_obj2QString(OBJ_nid2obj(ec_nid)) :
 					QString::number(size));
 	}
@@ -157,6 +166,10 @@ class keyjob
 	bool isEC() const
 	{
 		return ktype.type == EVP_PKEY_EC;
+	}
+	bool isIBC() const
+	{
+		return ktype.type == EVP_PKEY_IBC;
 	}
 	bool isED25519() const
 	{
@@ -172,9 +185,9 @@ class keyjob
 			return false;
 		if (isED25519())
 			return true;
-		if (isEC() && builtinCurves.containNid(ec_nid))
+		if ((isEC() || isIBC()) && builtinCurves.containNid(ec_nid))
 			return true;
-		if (!isEC() && size > 0)
+		if (!isEC() && !isIBC() && size > 0)
 			return true;
 		return false;
 	}

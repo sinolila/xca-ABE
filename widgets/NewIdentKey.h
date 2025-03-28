@@ -21,6 +21,7 @@ class NewIdentKey: public QDialog, public Ui::NewKey
 		void updateCurves(unsigned min=0, unsigned max=INT_MAX,
 			unsigned long ec_flags=0);
 		void addCurveBoxCurves(const QList<builtin_curve> &curves);
+		void populateIBCParameters();
 	public:
 		NewIdentKey(QWidget *parent, const QString &name);
 		keyjob getKeyJob() const;

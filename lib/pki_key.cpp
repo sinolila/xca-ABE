@@ -109,38 +109,32 @@ bool pki_key::pem(BioByteArray &b, const pki_export *xport)
 			uint8_t *derData = NULL;
 			size_t derLen = 0;
 			
-			// 生成SM9签名主公钥DER格式
-			// 示例代码，实际实现需要根据GmSSL接口调整
-			// SM9_SIGN_MASTER_KEY sm9_master_key;
-			// 从EVP_PKEY中获取SM9_SIGN_MASTER_KEY
-			// 将SM9_SIGN_MASTER_KEY转换为DER格式
-			// sm9_sign_master_public_key_to_der(&sm9_master_key, &derData, &derLen);
-			
-			if (derData) {
+			// 使用桥接层导出主公钥
+			if (sm9_bridge::sign_master_public_key_to_der(key, &derData, &derLen)) {
 				pubKeyDer = QByteArray((char*)derData, derLen);
 				QByteArray pemData = "-----BEGIN SM9 SIGN MASTER PUBLIC KEY-----\n";
 				pemData += pubKeyDer.toBase64();
 				pemData += "\n-----END SM9 SIGN MASTER PUBLIC KEY-----\n";
 				b += pemData;
+				
+				// 释放内存
+				sm9_bridge::free_der_data(derData);
 			}
 		} else if (getKeyType() == EVP_PKEY_SM9_ENC) {
 			QByteArray pubKeyDer;
 			uint8_t *derData = NULL;
 			size_t derLen = 0;
 			
-			// 生成SM9加密主公钥DER格式
-			// 示例代码，实际实现需要根据GmSSL接口调整
-			// SM9_ENC_MASTER_KEY sm9_master_key;
-			// 从EVP_PKEY中获取SM9_ENC_MASTER_KEY
-			// 将SM9_ENC_MASTER_KEY转换为DER格式
-			// sm9_enc_master_public_key_to_der(&sm9_master_key, &derData, &derLen);
-			
-			if (derData) {
+			// 使用桥接层导出主公钥
+			if (sm9_bridge::enc_master_public_key_to_der(key, &derData, &derLen)) {
 				pubKeyDer = QByteArray((char*)derData, derLen);
 				QByteArray pemData = "-----BEGIN SM9 ENC MASTER PUBLIC KEY-----\n";
 				pemData += pubKeyDer.toBase64();
 				pemData += "\n-----END SM9 ENC MASTER PUBLIC KEY-----\n";
 				b += pemData;
+				
+				// 释放内存
+				sm9_bridge::free_der_data(derData);
 			}
 		} else {
 			PEM_write_bio_PUBKEY(b, key);

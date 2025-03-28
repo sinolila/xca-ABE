@@ -20,8 +20,8 @@ ItemCombo.h		RevocationList.cpp	distname.h
 KeyDetail.cpp		RevocationList.h	hashBox.cpp
 KeyDetail.h		SearchPkcs11.cpp	hashBox.h
 KeyTreeView.cpp		SearchPkcs11.h		kvView.cpp
-KeyTreeView.h		TempTreeView.cpp	kvView.h
-MW_help.cpp		TempTreeView.h		v3ext.cpp
+KeyTreeView.h			kvView.h
+MW_help.cpp				v3ext.cpp
 MW_menu.cpp		X509SuperTreeView.cpp	v3ext.h
 MainWindow.cpp		X509SuperTreeView.h	validity.cpp
 MainWindow.h		XcaApplication.cpp	validity.h
