@@ -102,47 +102,8 @@ bool pki_key::pem(BioByteArray &b, const pki_export *xport)
 		return false;
 	if (xport->match_all(F_SSH2))
 		b += SSH2publicQByteArray();
-	else if (xport->match_all(F_PEM)) {
-#ifdef EVP_PKEY_SM9
-		if (getKeyType() == EVP_PKEY_SM9_SIGN) {
-			QByteArray pubKeyDer;
-			uint8_t *derData = NULL;
-			size_t derLen = 0;
-			
-			// 使用桥接层导出主公钥
-			if (sm9_bridge::sign_master_public_key_to_der(key, &derData, &derLen)) {
-				pubKeyDer = QByteArray((char*)derData, derLen);
-				QByteArray pemData = "-----BEGIN SM9 SIGN MASTER PUBLIC KEY-----\n";
-				pemData += pubKeyDer.toBase64();
-				pemData += "\n-----END SM9 SIGN MASTER PUBLIC KEY-----\n";
-				b += pemData;
-				
-				// 释放内存
-				sm9_bridge::free_der_data(derData);
-			}
-		} else if (getKeyType() == EVP_PKEY_SM9_ENC) {
-			QByteArray pubKeyDer;
-			uint8_t *derData = NULL;
-			size_t derLen = 0;
-			
-			// 使用桥接层导出主公钥
-			if (sm9_bridge::enc_master_public_key_to_der(key, &derData, &derLen)) {
-				pubKeyDer = QByteArray((char*)derData, derLen);
-				QByteArray pemData = "-----BEGIN SM9 ENC MASTER PUBLIC KEY-----\n";
-				pemData += pubKeyDer.toBase64();
-				pemData += "\n-----END SM9 ENC MASTER PUBLIC KEY-----\n";
-				b += pemData;
-				
-				// 释放内存
-				sm9_bridge::free_der_data(derData);
-			}
-		} else {
-			PEM_write_bio_PUBKEY(b, key);
-		}
-#else
+	else if (xport->match_all(F_PEM))
 		PEM_write_bio_PUBKEY(b, key);
-#endif
-	}
 
 	return true;
 }
@@ -165,14 +126,6 @@ QString pki_key::getJWKcrv() const
 		}
 		qDebug() << name << OBJ_nid2sn(nid) << nid;
 	}
-#ifdef EVP_PKEY_SM9
-	else if (getKeyType() == EVP_PKEY_SM9_SIGN) {
-		name = "sm9sign";
-	}
-	else if (getKeyType() == EVP_PKEY_SM9_ENC) {
-		name = "sm9enc";
-	}
-#endif
 #endif
 	return QString(name);
 }
@@ -209,26 +162,6 @@ void pki_key::fillJWK(QJsonObject &json, const pki_export *) const
 		}
 		BN_free(x);
 		BN_free(y);
-		break;
-		}
-#endif
-#ifdef EVP_PKEY_SM9
-	case EVP_PKEY_SM9_SIGN: {
-		QByteArray pubKey = sm9SignMasterPubKey();
-		if (!pubKey.isEmpty()) {
-			json["x"] = base64UrlEncode(pubKey);
-			json["kty"] = "SM9";
-			json["crv"] = "sm9sign";
-		}
-		break;
-		}
-	case EVP_PKEY_SM9_ENC: {
-		QByteArray pubKey = sm9EncMasterPubKey();
-		if (!pubKey.isEmpty()) {
-			json["x"] = base64UrlEncode(pubKey);
-			json["kty"] = "SM9";
-			json["crv"] = "sm9enc";
-		}
 		break;
 		}
 #endif
@@ -387,17 +320,10 @@ int pki_key::ecParamNid() const
 {
 	const EC_KEY *ec;
 
-	if (getKeyType() == EVP_PKEY_EC) {
-		ec = EVP_PKEY_get0_EC_KEY(key);
-		return EC_GROUP_get_curve_name(EC_KEY_get0_group(ec));
-	}
-#ifdef EVP_PKEY_SM9
-	else if (getKeyType() == EVP_PKEY_SM9_SIGN || getKeyType() == EVP_PKEY_SM9_ENC) {
-		// SM9使用的曲线ID，可能需要定义
-		return NID_sm9; // 如果定义了SM9的NID
-	}
-#endif
-	return NID_undef;
+	if (getKeyType() != EVP_PKEY_EC)
+		return NID_undef;
+	ec = EVP_PKEY_get0_EC_KEY(key);
+	return EC_GROUP_get_curve_name(EC_KEY_get0_group(ec));
 }
 
 BIGNUM *pki_key::ecPubKeyBN() const
@@ -460,99 +386,6 @@ QByteArray pki_key::ed25519PrivKey(const EVP_PKEY *) const
 #endif
 #endif
 
-#ifdef EVP_PKEY_SM9
-// 获取SM9签名主公钥
-QByteArray pki_key::sm9SignMasterPubKey() const
-{
-	if (getKeyType() != EVP_PKEY_SM9_SIGN)
-		return QByteArray();
-    
-	// 从EVP_PKEY中提取SM9_SIGN_MASTER_KEY
-	QByteArray pubKey;
-	unsigned char Ppubs[129]; // 1 + 32 * 4
-	size_t key_len = sizeof(Ppubs);
-    
-	// 为了对接GmSSL的SM9实现，假设使用以下方式:
-	// 方法1: 如果GmSSL提供了EVP_PKEY转换函数
-	// SM9_SIGN_MASTER_KEY *sm9_key = EVP_PKEY_get0_SM9_SIGN_MASTER_KEY(key);
-	// if (sm9_key) {
-	//    sm9_z256_twist_point_to_uncompressed_octets(&sm9_key->Ppubs, Ppubs);
-	//    pubKey = QByteArray((char*)Ppubs, sizeof(Ppubs));
-	// }
-    
-	// 方法2: 如果EVP_PKEY中存储了DER格式的SM9主公钥
-	// 从EVP_PKEY中提取DER格式的SM9主公钥
-	uint8_t *derData = NULL;
-	size_t derLen = 0;
-	// 假设EVP_PKEY_get0_sm9_sign_master_public_key是一个获取DER格式SM9主公钥的函数
-	// if (EVP_PKEY_get0_sm9_sign_master_public_key(key, &derData, &derLen)) {
-	//    pubKey = QByteArray((char*)derData, derLen);
-	// }
-    
-	return pubKey;
-}
-
-// 获取SM9加密主公钥
-QByteArray pki_key::sm9EncMasterPubKey() const
-{
-	if (getKeyType() != EVP_PKEY_SM9_ENC)
-		return QByteArray();
-    
-	QByteArray pubKey;
-	unsigned char Ppube[65]; // 1 + 32 * 2
-    
-	// 类似于sm9SignMasterPubKey，从EVP_PKEY中提取SM9加密主公钥
-	// SM9_ENC_MASTER_KEY *sm9_key = EVP_PKEY_get0_SM9_ENC_MASTER_KEY(key);
-	// if (sm9_key) {
-	//    sm9_z256_point_to_uncompressed_octets(&sm9_key->Ppube, Ppube);
-	//    pubKey = QByteArray((char*)Ppube, sizeof(Ppube));
-	// }
-    
-	return pubKey;
-}
-
-// 获取SM9签名私钥
-QByteArray pki_key::sm9SignPrivKey() const
-{
-	if (getKeyType() != EVP_PKEY_SM9_SIGN || isPubKey())
-		return QByteArray();
-    
-	// 从EVP_PKEY中提取SM9签名私钥
-	QByteArray privKey;
-    
-	// 方法1: 如果GmSSL提供了EVP_PKEY转换函数
-	// 下面是示例代码，实际实现需根据GmSSL的API
-	// SM9_SIGN_KEY *sm9_key = EVP_PKEY_get0_SM9_SIGN_KEY(key);
-	// if (sm9_key) {
-	//    unsigned char ds[65];
-	//    sm9_z256_point_to_uncompressed_octets(&sm9_key->ds, ds);
-	//    privKey = QByteArray((char*)ds, sizeof(ds));
-	// }
-    
-	return privKey;
-}
-
-// 获取SM9加密私钥
-QByteArray pki_key::sm9EncPrivKey() const
-{
-	if (getKeyType() != EVP_PKEY_SM9_ENC || isPubKey())
-		return QByteArray();
-    
-	// 从EVP_PKEY中提取SM9加密私钥
-	QByteArray privKey;
-    
-	// 方法1: 如果GmSSL提供了EVP_PKEY转换函数
-	// SM9_ENC_KEY *sm9_key = EVP_PKEY_get0_SM9_ENC_KEY(key);
-	// if (sm9_key) {
-	//    unsigned char de[129];
-	//    sm9_z256_twist_point_to_uncompressed_octets(&sm9_key->de, de);
-	//    privKey = QByteArray((char*)de, sizeof(de));
-	// }
-    
-	return privKey;
-}
-#endif
-
 QList<int> pki_key::possibleHashNids()
 {
 	QList<int> nids;
@@ -580,12 +413,6 @@ QList<int> pki_key::possibleHashNids()
 		case EVP_PKEY_ED25519:
 			nids << NID_undef;
 #endif
-#endif
-#ifdef EVP_PKEY_SM9
-		case EVP_PKEY_SM9_SIGN:
-		case EVP_PKEY_SM9_ENC:
-			nids << NID_sm3; // SM9使用SM3哈希算法
-			break;
 #endif
 	}
 	return nids;
@@ -881,11 +708,6 @@ bool pki_key::SSH2_compatible() const
 	case EVP_PKEY_RSA:
 	case EVP_PKEY_DSA:
 		return true;
-#ifdef EVP_PKEY_SM9
-	case EVP_PKEY_SM9_SIGN:
-	case EVP_PKEY_SM9_ENC:
-		return false; // SM9暂不支持SSH2
-#endif
 	}
 	return false;
 }
@@ -941,26 +763,6 @@ QByteArray pki_key::SSH2publicQByteArray(bool raw) const
 		ssh_key_QBA2data(ed25519PubKey(), &data);
 		break;
 #endif
-#endif
-#ifdef EVP_PKEY_SM9
-	case EVP_PKEY_SM9_SIGN: {
-		QByteArray pubKey = sm9SignMasterPubKey();
-		if (!pubKey.isEmpty()) {
-			txt = "ssh-sm9sign";
-			ssh_key_QBA2data(txt, &data);
-			ssh_key_QBA2data(pubKey, &data);
-		}
-		break;
-		}
-	case EVP_PKEY_SM9_ENC: {
-		QByteArray pubKey = sm9EncMasterPubKey();
-		if (!pubKey.isEmpty()) {
-			txt = "ssh-sm9enc";
-			ssh_key_QBA2data(txt, &data);
-			ssh_key_QBA2data(pubKey, &data);
-		}
-		break;
-		}
 #endif
 	default:
 		return QByteArray();

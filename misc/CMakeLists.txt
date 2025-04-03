@@ -1,4 +1,3 @@
-
 set(S "${PROJECT_SOURCE_DIR}/misc")
 set(D "${PROJECT_BINARY_DIR}/misc")
 file(MAKE_DIRECTORY ${D})
@@ -56,6 +55,10 @@ if (UNIX AND NOT APPLE)
   install(FILES ${TEXT_FILES} ${XCA_TEMPLATES}
         DESTINATION ${CMAKE_INSTALL_DATADIR}/${CMAKE_PROJECT_NAME}
   )
+  install(FILES ${S}/sm9keygen.sh
+        DESTINATION ${CMAKE_INSTALL_BINDIR}
+        PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+  )
   install(FILES misc/de.hohnstaedt.xca.desktop
         DESTINATION ${CMAKE_INSTALL_DATADIR}/applications
   )
@@ -72,5 +75,8 @@ if (UNIX AND NOT APPLE)
 elseif(WIN32)
   install(FILES ${TEXT_FILES} ${XCA_TEMPLATES}
 	  DESTINATION ${RUNTIME_DEST}
+  )
+  install(FILES ${S}/sm9keygen.sh
+          DESTINATION ${RUNTIME_DEST}
   )
 endif()

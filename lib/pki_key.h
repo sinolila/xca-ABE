@@ -20,76 +20,82 @@
 #define PEM_STRING_OPENSSH_KEY "OPENSSH PRIVATE KEY"
 #define DEFAULT_KEY_LENGTH 2048
 #define ED25519_KEYLEN 32
+#define EVP_PKEY_SM9_SIGN 1000 
+#define EVP_PKEY_SM9_ENC  1004
 
 #define VIEW_public_keys_type 6
 #define VIEW_public_keys_len 7
 #define VIEW_public_keys_public 8
 
+// SM9 Êú∫Âà∂ÂÆö‰πâ
+#ifndef CKM_SM9_SIGN_KEY_GEN
+#define CKM_SM9_SIGN_KEY_GEN 0x00001300
+#endif
+
+#ifndef CKM_SM9_ENCRYPT_KEY_GEN
+#define CKM_SM9_ENCRYPT_KEY_GEN 0x00001301
+#endif
+
 extern builtin_curves builtinCurves;
-
-// ÃÌº”SM9√‹‘ø¿‡–Õ≥£¡ø∂®“Â
-#ifndef EVP_PKEY_SM9
-#define EVP_PKEY_SM9_SIGN 406
-#define EVP_PKEY_SM9_ENC  407
-#endif
-
-// ÃÌº”IBC√‹‘ø¿‡–Õ≥£¡ø∂®“Â
-#ifndef EVP_PKEY_IBC
-#define EVP_PKEY_IBC 408
-#endif
 
 class keytype
 {
+  private:
+    // ‰∏∫‰∫ÜÈùôÊÄÅÂàùÂßãÂåñÊèê‰æõ‰∏Ä‰∏™ËæÖÂä©Á±ª
+    class keytype_container {
+    public:
+        QList<keytype> types;
+    };
+    
   public:
 	static QList<keytype> types()
 	{
-		return QList<keytype> {
-			keytype(EVP_PKEY_RSA, "RSA", CKM_RSA_PKCS_KEY_PAIR_GEN,
-				false, true),
-			keytype(EVP_PKEY_DSA, "DSA", CKM_DSA_KEY_PAIR_GEN,
-				false, true),
+		static keytype_container s;
+		if (s.types.isEmpty()) {
+			s.types << keytype(EVP_PKEY_RSA, "RSA", CKM_RSA_PKCS_KEY_PAIR_GEN,
+				false, true);
+			s.types << keytype(EVP_PKEY_DSA, "DSA", CKM_DSA_KEY_PAIR_GEN,
+				false, true);
 #ifndef OPENSSL_NO_EC
-			keytype(EVP_PKEY_EC, "EC", CKM_EC_KEY_PAIR_GEN,
-				true, false),
-#endif
+			s.types << keytype(EVP_PKEY_EC, "EC", CKM_EC_KEY_PAIR_GEN,
+				true, false);
 #ifdef EVP_PKEY_ED25519
-			keytype(EVP_PKEY_ED25519, "ED25519", CKM_VENDOR_DEFINED, false, false),
+			s.types << keytype(EVP_PKEY_ED25519, "ED25519", CKM_VENDOR_DEFINED, false, false);
 #endif
-#ifdef EVP_PKEY_SM9
-			keytype(EVP_PKEY_IBC, "IBC", CKM_VENDOR_DEFINED, true, false),
-			// keytype(EVP_PKEY_SM9_SIGN, "SM9_SIGN", CKM_VENDOR_DEFINED, false, false),
-			// keytype(EVP_PKEY_SM9_ENC, "SM9_ENC", CKM_VENDOR_DEFINED, false, false),
 #endif
-
-
-		};
+			s.types << keytype(EVP_PKEY_SM9_SIGN, "SM9_sign_key", CKM_SM9_SIGN_KEY_GEN, false, false, true);
+			s.types << keytype(EVP_PKEY_SM9_ENC, "SM9_encry_key", CKM_SM9_ENCRYPT_KEY_GEN, false, false, true);
+		}
+		return s.types;
 	}
+	
 	int type{};
 	QString name{};
 	CK_MECHANISM_TYPE mech{};
 	bool curve{}, length{};
+	bool ibc_type{false};
 
-	keytype(int t, const QString &n, CK_MECHANISM_TYPE m, bool c, bool l)
-			: type(t), name(n), mech(m), curve(c), length(l) { }
+
+	keytype(int t, const QString &n, CK_MECHANISM_TYPE m, bool c, bool l, bool ibc = false)
+			: type(t), name(n), mech(m), curve(c), length(l), ibc_type(ibc) { }
+	
 	keytype() : type(-1), name(QString()), mech(0),
-			curve(false), length(true) { }
-	bool isValid() const
+			curve(false), length(true), ibc_type(false) { }
+	
+	bool isValid()
 	{
 		return type != -1;
 	}
+	
 	QString traditionalPemName() const
 	{
 		return
 #ifdef EVP_PKEY_ED25519
 			type == EVP_PKEY_ED25519 ? QString("PRIVATE KEY") :
 #endif
-#ifdef EVP_PKEY_SM9
-			type == EVP_PKEY_SM9_SIGN ? QString("SM9 SIGN PRIVATE KEY") :
-			type == EVP_PKEY_SM9_ENC ? QString("SM9 ENC PRIVATE KEY") :
-#endif
-			type == EVP_PKEY_IBC ? QString("IBC PRIVATE KEY") :
 				QString("%1 PRIVATE KEY").arg(name);
 	}
+	
 	static const keytype byType(int type)
 	{
 		foreach(const keytype t, types()) {
@@ -98,6 +104,7 @@ class keytype
 		}
 		return keytype();
 	}
+	
 	static const keytype byMech(CK_MECHANISM_TYPE mech)
 	{
 		foreach(const keytype t, types()) {
@@ -106,6 +113,7 @@ class keytype
 		}
 		return keytype();
 	}
+	
 	static const keytype byName(const QString &name)
 	{
 		foreach(const keytype t, types()) {
@@ -114,12 +122,23 @@ class keytype
 		}
 		return keytype();
 	}
+	
 	static const keytype byPKEY(EVP_PKEY *pkey)
 	{
 		return byType(EVP_PKEY_type(EVP_PKEY_id(pkey)));
 	}
+	
+	bool isIBC() const { 
+		return ibc_type; 
+	}
+	
+	bool isSM9() const
+	{
+		return type == EVP_PKEY_SM9_SIGN || type == EVP_PKEY_SM9_ENC;
+	}
 };
 
+//ÈîüÊñ§Êã∑ÈîüÊñ§Êã∑ÈîüÊñ§Êã∑Èí•Êó∂ÊâßÈîüÂè´Á¢âÊã∑ÈîüÊñ§Êã∑ÈîüÊñ§Êã∑
 class keyjob
 {
   public:
@@ -128,6 +147,12 @@ class keyjob
 	int size;
 	int ec_nid;
 	slotid slot;
+	
+	// SM9 Áõ∏ÂÖ≥ÂèÇÊï∞
+	QString sm9Type;       // "sm9sign" Êàñ "sm9encrypt"
+	QString masterKeyPass; // ‰∏ªÂØÜÈí•ÂØÜÁ†Å
+	QString userId;        // Áî®Êà∑ID
+	
 	keyjob() {
 		size = DEFAULT_KEY_LENGTH;
 		ktype = keytype::byName("RSA");
@@ -144,18 +169,19 @@ class keyjob
 		ktype = keytype::byName(sl[0]);
 		size = DEFAULT_KEY_LENGTH;
 		ec_nid = NID_undef;
-		if (isEC() || isIBC())
+		if (isEC())
 			ec_nid = OBJ_txt2nid(sl[1].toLatin1());
 		else if (!isED25519())
 			size = sl[1].toInt();
 		slot = slotid();
 		ign_openssl_error();
+		
 	}
 	QString toString()
 	{
 		if (isED25519())
 			return ktype.name;
-		return QString("%1:%2").arg(ktype.name) .arg(isEC() || isIBC() ?
+		return QString("%1:%2").arg(ktype.name) .arg(isEC() ?
 					OBJ_obj2QString(OBJ_nid2obj(ec_nid)) :
 					QString::number(size));
 	}
@@ -167,10 +193,6 @@ class keyjob
 	{
 		return ktype.type == EVP_PKEY_EC;
 	}
-	bool isIBC() const
-	{
-		return ktype.type == EVP_PKEY_IBC;
-	}
 	bool isED25519() const
 	{
 #ifdef EVP_PKEY_ED25519
@@ -179,18 +201,27 @@ class keyjob
 		return false;
 #endif
 	}
+	bool isIBC() const
+	{
+		return ktype.isIBC();
+	}
 	bool isValid()
 	{
 		if (!ktype.isValid())
 			return false;
 		if (isED25519())
 			return true;
-		if ((isEC() || isIBC()) && builtinCurves.containNid(ec_nid))
+
+		if (isEC() && builtinCurves.containNid(ec_nid))
 			return true;
 		if (!isEC() && !isIBC() && size > 0)
 			return true;
 		return false;
 	}
+	   bool isSM9() const
+   {
+       return ktype.isSM9();
+   }
 };
 
 class pki_key: public pki_base
@@ -281,12 +312,6 @@ class pki_key: public pki_base
 		QByteArray ed25519PubKey() const;
 		QByteArray ed25519PrivKey(const EVP_PKEY *pkey) const;
 		BIGNUM *ecPubKeyBN() const;
-#ifdef EVP_PKEY_SM9
-		QByteArray sm9SignMasterPubKey() const;
-		QByteArray sm9EncMasterPubKey() const;
-		QByteArray sm9SignPrivKey() const;
-		QByteArray sm9EncPrivKey() const;
-#endif
 #endif
 		void d2i(QByteArray &ba);
 		void d2i_old(QByteArray &ba, int type);

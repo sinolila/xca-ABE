@@ -17,7 +17,6 @@
 
 #include "PwDialogCore.h"
 #include "XcaWarningCore.h"
-
 #include <openssl/rand.h>
 #include <openssl/evp.h>
 #include <openssl/pem.h>
@@ -154,6 +153,7 @@ void pki_evp::generate(const keyjob &task)
 	}
 #endif
 #endif
+
 	}
 	BN_GENCB_free(bar);
 	isPub = false;
@@ -206,6 +206,7 @@ static bool EVP_PKEY_isPrivKey(EVP_PKEY *key)
 		}
 #endif
 #endif
+
 	}
 	return false;
 }

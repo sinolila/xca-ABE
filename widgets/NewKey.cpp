@@ -102,8 +102,10 @@ NewKey::NewKey(QWidget *parent, const QString &name)
 	foreach (int size, sizeList)
 		keyLength->addItem(QString("%1 bit").arg(size));
 
-	foreach (const keytype t, keytype::types())
-		keytypes << keyListItem(t);
+	foreach (const keytype t, keytype::types()) {
+		if (!t.isIBC())
+			keytypes << keyListItem(t);
+	}
 
 	updateCurves();
 	keyLength->setEditText(QString("%1 bit").arg(keyjob::defaultjob.size));
@@ -114,10 +116,11 @@ NewKey::NewKey(QWidget *parent, const QString &name)
 
 		foreach(slotid slot, p11_slots) {
 			QList<CK_MECHANISM_TYPE> ml = p11.mechanismList(slot);
-			foreach(keytype t, keytype::types())
-				if (ml.contains(t.mech))
+			foreach(keytype t, keytype::types()) {
+				if (!t.isIBC() && ml.contains(t.mech))
 					keytypes << keyListItem(&p11, slot,
 								t.mech);
+			}
 		}
 	} catch (errorEx &) {
 		p11_slots.clear();
@@ -210,7 +213,7 @@ keyjob NewKey::getKeyJob() const
 		size.replace(QRegularExpression("[^0-9]"), "");
 		job.size = size.toInt();
 	}
-	job.slot = selected.slot;
+	job.slot = selected.slot;//智能卡相关的配置
 	return job;
 }
 

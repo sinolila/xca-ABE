@@ -181,12 +181,12 @@ void IdentKeyTreeView::newItem(const QString &name)
 	if (!basemodel)
 		return;
 
-	NewIdentKey *dlg = new NewIdentKey(this, name);
+	NewIdentKey *dlg = new NewIdentKey(this, name);//初始化，栈内存动态获取
 
 	if (dlg->exec()) {
 		keyjob job = dlg->getKeyJob();
 		// 处理IBC密钥
-		keys()->newKey(job, dlg->keyDesc->text());
+		keys()->newKey(job, dlg->keyDesc->text());//db_key为标识密钥重构一份
 	}
 	delete dlg;
 }

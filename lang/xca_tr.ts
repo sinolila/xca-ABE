@@ -5836,4 +5836,125 @@ It is stored in the XCA database &apos;%4&apos;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
+
+<!-- 添加 NewIdentKey 相关翻译 -->
+<context>
+    <name>NewIdentKey</name>
+    <message>
+        <location filename="../widgets/NewIdentKey.cpp" line="130"/>
+        <source>Create</source>
+        <translation>Oluştur</translation>
+    </message>
+    <message>
+        <location filename="../widgets/NewIdentKey.cpp" line="168"/>
+        <source>Please enter key description</source>
+        <translation>请输入密钥描述</translation>
+    </message>
+    <message>
+        <location filename="../widgets/NewIdentKey.cpp" line="81"/>
+        <source>SM9 Type:</source>
+        <translation>SM9 类型:</translation>
+    </message>
+    <message>
+        <location filename="../widgets/NewIdentKey.cpp" line="83"/>
+        <source>Signing Key</source>
+        <translation>签名密钥</translation>
+    </message>
+    <message>
+        <location filename="../widgets/NewIdentKey.cpp" line="84"/>
+        <source>Encryption Key</source>
+        <translation>加密密钥</translation>
+    </message>
+    <message>
+        <location filename="../widgets/NewIdentKey.cpp" line="87"/>
+        <source>Master Key Password:</source>
+        <translation>主密钥密码:</translation>
+    </message>
+    <message>
+        <location filename="../widgets/NewIdentKey.cpp" line="93"/>
+        <source>User ID:</source>
+        <translation>用户ID:</translation>
+    </message>
+    <message>
+        <location filename="../widgets/NewIdentKey.cpp" line="179"/>
+        <source>SM9 key generation failed: %1</source>
+        <translation>SM9 密钥生成失败: %1</translation>
+    </message>
+    <message>
+        <location filename="../widgets/NewIdentKey.cpp" line="194"/>
+        <source>Please enter master key password</source>
+        <translation>请输入主密钥密码</translation>
+    </message>
+    <message>
+        <location filename="../widgets/NewIdentKey.cpp" line="199"/>
+        <source>Please enter user ID</source>
+        <translation>请输入用户 ID</translation>
+    </message>
+    <message>
+        <location filename="../widgets/NewIdentKey.cpp" line="212"/>
+        <source>SM9 key generation script not found, please ensure correct installation</source>
+        <translation>找不到 SM9 密钥生成脚本，请确保安装正确</translation>
+    </message>
+    <message>
+        <location filename="../widgets/NewIdentKey.cpp" line="229"/>
+        <source>Unable to start SM9 key generation script for master key</source>
+        <translation>无法启动 SM9 密钥生成脚本生成主密钥</translation>
+    </message>
+    <message>
+        <location filename="../widgets/NewIdentKey.cpp" line="235"/>
+        <source>SM9 master key generation timeout</source>
+        <translation>SM9 主密钥生成超时</translation>
+    </message>
+    <message>
+        <location filename="../widgets/NewIdentKey.cpp" line="243"/>
+        <source>SM9 master key generation failed:\n%1\n%2</source>
+        <translation>SM9 主密钥生成失败:\n%1\n%2</translation>
+    </message>
+    <message>
+        <location filename="../widgets/NewIdentKey.cpp" line="250"/>
+        <source>Generated SM9 master key file not found</source>
+        <translation>未找到生成的 SM9 主密钥文件</translation>
+    </message>
+    <message>
+        <location filename="../widgets/NewIdentKey.cpp" line="268"/>
+        <source>Unable to start SM9 key generation script for user key</source>
+        <translation>无法启动 SM9 密钥生成脚本生成用户密钥</translation>
+    </message>
+    <message>
+        <location filename="../widgets/NewIdentKey.cpp" line="274"/>
+        <source>SM9 user key generation timeout</source>
+        <translation>SM9 用户密钥生成超时</translation>
+    </message>
+    <message>
+        <location filename="../widgets/NewIdentKey.cpp" line="282"/>
+        <source>SM9 user key generation failed:\n%1\n%2</source>
+        <translation>SM9 用户密钥生成失败:\n%1\n%2</translation>
+    </message>
+    <message>
+        <location filename="../widgets/NewIdentKey.cpp" line="289"/>
+        <source>Generated SM9 user key file not found</source>
+        <translation>未找到生成的 SM9 用户密钥文件</translation>
+    </message>
+    <message>
+        <location filename="../widgets/NewIdentKey.cpp" line="299"/>
+        <source>Unable to open master key file</source>
+        <translation>无法打开主密钥文件</translation>
+    </message>
+    <message>
+        <location filename="../widgets/NewIdentKey.cpp" line="310"/>
+        <source>Unable to open user key file</source>
+        <translation>无法打开用户密钥文件</translation>
+    </message>
+    <message>
+        <location filename="../widgets/NewIdentKey.cpp" line="322"/>
+        <source>Unable to import generated key: %1</source>
+        <translation>无法导入生成的密钥: %1</translation>
+    </message>
+    <message>
+        <location filename="../widgets/NewIdentKey.cpp" line="146"/>
+        <source>GmSSL tool not detected. Please ensure GmSSL is installed and added to PATH environment variable, otherwise SM9 keys cannot be generated.</source>
+        <translation>未检测到 GmSSL 工具。请确保 GmSSL 已安装并添加到 PATH 环境变量中，否则无法生成 SM9 密钥。</translation>
+    </message>
+</context>
+
 </TS>

@@ -17,6 +17,11 @@
 
 #include "XcaWarningCore.h"
 #include "PwDialogCore.h"
+#include <QMessageBox>
+#include <QProcess>
+#include <QDir>
+#include <QDateTime>
+#include <openssl/bio.h>
 
 db_key::db_key() : db_base("keys")
 {
@@ -147,27 +152,32 @@ pki_base* db_key::insert(pki_base *item)
 	return insertPKI(lkey);
 }
 
-pki_key *db_key::newKey(const keyjob &task, const QString &name)
+pki_key *db_key::newKey(const keyjob &job, const QString &name)
 {
+	// 处理 SM9 密钥
+	if (job.isSM9()) {
+		return newSM9Key(job, name);
+	}
+	
 	pki_key *key = NULL;
 
-	if (!task.isEC() && !task.isED25519()) {
-		if (task.size < 32) {
+	if (!job.isEC() && !job.isED25519()) {
+		if (job.size < 32) {
 			XCA_WARN(tr("Key size too small !"));
 			return NULL;
 		}
-		if (task.size < 1024 || task.size > 8192)
-			if (!XCA_YESNO(tr("You are sure to create a key of the size: %1 ?").arg(task.size))) {
+		if (job.size < 1024 || job.size > 8192)
+			if (!XCA_YESNO(tr("You are sure to create a key of the size: %1 ?").arg(job.size))) {
 				return NULL;
 			}
 	}
 	try {
-		if (task.isToken()) {
+		if (job.isToken()) {
 			key = new pki_scard(name);
 		} else {
 			key = new pki_evp(name);
 		}
-		key->generate(task);
+		key->generate(job);
 		key->pkiSource = generated;
 		if (key->getIntName().isEmpty())
 			key->autoIntName(name);
@@ -301,4 +311,111 @@ void db_key::setOwnPass(QModelIndex idx, enum pki_key::passType x)
 	targetKey->setOwnPass(x);
 	if (!targetKey->sqlUpdatePrivateKey())
 		targetKey->setOwnPass(old_type);
+}
+
+// 处理 SM9 密钥生成
+pki_key *db_key::newSM9Key(const keyjob &job, const QString &name)
+{
+	if (job.sm9Type.isEmpty() || job.masterKeyPass.isEmpty() || job.userId.isEmpty()) {
+		QMessageBox::warning(NULL, XCA_TITLE, tr("SM9 参数不完整"));
+		return NULL;
+	}
+	
+	// 创建临时目录
+	QString tempDir = QDir::tempPath() + "/xca_sm9_" + 
+					 QString::number(QDateTime::currentMSecsSinceEpoch());
+	QDir().mkpath(tempDir);
+	
+	// 设置文件路径
+	QString masterKeyPath = tempDir + "/master_key.pem";
+	QString userKeyPath = tempDir + "/user_key.pem";
+	
+	// 构建 sm9setup 命令参数
+	QStringList setupArgs;
+	setupArgs << "sm9setup" 
+			  << "-alg" << job.sm9Type
+			  << "-pass" << job.masterKeyPass
+			  << "-out" << masterKeyPath;
+	
+	// 执行 sm9setup 命令
+	QProcess setupProcess;
+	setupProcess.start("gmssl", setupArgs);
+	
+	if (!setupProcess.waitForFinished(30000)) {
+		setupProcess.kill();
+		QMessageBox::warning(NULL, XCA_TITLE, tr("SM9 主密钥生成失败"));
+		QDir(tempDir).removeRecursively();
+		return NULL;
+	}
+	
+	// 检查主密钥文件
+	if (!QFile::exists(masterKeyPath)) {
+		QMessageBox::warning(NULL, XCA_TITLE, tr("未找到生成的 SM9 主密钥文件"));
+		QDir(tempDir).removeRecursively();
+		return NULL;
+	}
+	
+	// 构建 sm9keygen 命令参数
+	QStringList keygenArgs;
+	keygenArgs << "sm9keygen" 
+			   << "-alg" << job.sm9Type
+			   << "-in" << masterKeyPath
+			   << "-inpass" << job.masterKeyPass
+			   << "-id" << job.userId
+			   << "-out" << userKeyPath
+			   << "-outpass" << job.masterKeyPass;
+	
+	// 执行 sm9keygen 命令
+	QProcess keygenProcess;
+	keygenProcess.start("gmssl", keygenArgs);
+	
+	if (!keygenProcess.waitForFinished(30000)) {
+		keygenProcess.kill();
+		QMessageBox::warning(NULL, XCA_TITLE, tr("SM9 用户密钥生成失败"));
+		QDir(tempDir).removeRecursively();
+		return NULL;
+	}
+	
+	// 检查用户密钥文件
+	if (!QFile::exists(userKeyPath)) {
+		QMessageBox::warning(NULL, XCA_TITLE, tr("未找到生成的 SM9 用户密钥文件"));
+		QDir(tempDir).removeRecursively();
+		return NULL;
+	}
+	
+	try {
+		// 导入主密钥
+		BIO *bio_master = BIO_new_file(masterKeyPath.toUtf8().constData(), "r");
+		if (!bio_master) {
+			QMessageBox::warning(NULL, XCA_TITLE, tr("无法打开主密钥文件"));
+			QDir(tempDir).removeRecursively();
+			return NULL;
+		}
+		pki_evp *masterKey = new pki_evp(name + "_主密钥");
+		masterKey->fromPEM_BIO(bio_master, job.masterKeyPass.toUtf8().constData());
+		BIO_free(bio_master);
+		insert(masterKey);
+		
+		// 导入用户密钥
+		BIO *bio_user = BIO_new_file(userKeyPath.toUtf8().constData(), "r");
+		if (!bio_user) {
+			QMessageBox::warning(NULL, XCA_TITLE, tr("无法打开用户密钥文件"));
+			QDir(tempDir).removeRecursively();
+			return NULL;
+		}
+		pki_evp *userKey = new pki_evp(name);
+		userKey->fromPEM_BIO(bio_user, job.masterKeyPass.toUtf8().constData());
+		BIO_free(bio_user);
+		insert(userKey);
+		
+		// 删除临时文件
+		QDir(tempDir).removeRecursively();
+		
+		return userKey;
+	} catch (errorEx &err) {
+		QMessageBox::warning(NULL, XCA_TITLE, 
+						   tr("无法导入生成的密钥: %1").arg(err.getString()));
+		QDir(tempDir).removeRecursively();
+		return NULL;
+	}
 }
