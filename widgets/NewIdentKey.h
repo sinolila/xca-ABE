@@ -22,17 +22,14 @@ class NewIdentKey: public QDialog, public Ui::NewKey
 			unsigned long ec_flags=0);
 		void addCurveBoxCurves(const QList<builtin_curve> &curves);
 		void populateIBCParameters();
-		QLabel *masterKeyPassLabel;
-		QLineEdit *masterKeyPass;
 		QLabel *idLabel;
 		QLineEdit *idInput;
-		QComboBox *sm9TypeBox;
-		QLabel *sm9TypeLabel;
+		QLabel *masterKeyPassLabel;
+		QLineEdit *masterKeyPass;
 		QWidget *sm9Widget;
 		void setupSM9UI();
 		bool isSM9Selected();
 		bool generateSM9Key(const QString &keyName, QString &errorMsg);
-		bool checkGmSSLInstalled();
 	public:
 		NewIdentKey(QWidget *parent, const QString &name);
 		keyjob getKeyJob() const;

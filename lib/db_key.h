@@ -38,7 +38,7 @@ class db_key: public db_base
 		void setOwnPass(QModelIndex idx, enum pki_key::passType);
 		void loadContainer();
 		pki_key *newKey(const keyjob &job, const QString &name);
-		pki_key *newSM9Key(const keyjob &job, const QString &name);
+		pki_key *newIdentKey(const keyjob &job, const QString &name);
 		int exportFlags(const QModelIndex &index) const;
 		void exportItem(const QModelIndex &index,
 			const pki_export *xport, XFile &file) const;

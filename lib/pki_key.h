@@ -63,8 +63,8 @@ class keytype
 			s.types << keytype(EVP_PKEY_ED25519, "ED25519", CKM_VENDOR_DEFINED, false, false);
 #endif
 #endif
-			s.types << keytype(EVP_PKEY_SM9_SIGN, "SM9_sign_key", CKM_SM9_SIGN_KEY_GEN, false, false, true);
-			s.types << keytype(EVP_PKEY_SM9_ENC, "SM9_encry_key", CKM_SM9_ENCRYPT_KEY_GEN, false, false, true);
+			s.types << keytype(EVP_PKEY_SM9_SIGN, "sm9sign", CKM_SM9_SIGN_KEY_GEN, false, false, true);
+			s.types << keytype(EVP_PKEY_SM9_ENC, "sm9encrypt", CKM_SM9_ENCRYPT_KEY_GEN, false, false, true);
 		}
 		return s.types;
 	}

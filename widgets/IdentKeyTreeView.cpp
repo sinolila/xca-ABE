@@ -15,6 +15,7 @@
 #include "XcaWarning.h"
 #include <QAbstractItemView>
 #include <QMenu>
+#include <QMessageBox>
 
 void IdentKeyTreeView::fillContextMenu(QMenu *menu, QMenu *subExport,
 			const QModelIndex &index, QModelIndexList indexes)
@@ -185,8 +186,23 @@ void IdentKeyTreeView::newItem(const QString &name)
 
 	if (dlg->exec()) {
 		keyjob job = dlg->getKeyJob();
+		
+		// 检查SM9参数是否完整
+		if (job.ktype.isSM9()) {
+			if (job.sm9Type.isEmpty() || job.userId.isEmpty()) {
+				QMessageBox::warning(this, XCA_TITLE, 
+					tr("SM9 parameters incomplete. Please fill in all required fields."));
+				delete dlg;
+				return;
+			}
+		}
+		
 		// 处理IBC密钥
-		keys()->newKey(job, dlg->keyDesc->text());//db_key为标识密钥重构一份
+		pki_key *key = keys()->newIdentKey(job, dlg->keyDesc->text());
+		if (!key) {
+			QMessageBox::warning(this, XCA_TITLE, 
+				tr("Failed to generate key. Please check the parameters and try again."));
+		}
 	}
 	delete dlg;
 }

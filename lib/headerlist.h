@@ -58,6 +58,7 @@
 #define HD_key_use  -52
 #define HD_key_passwd -53
 #define HD_key_curve -54
+#define HD_sm9_userid -55
 
 class dbheader
 {

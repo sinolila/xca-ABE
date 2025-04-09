@@ -1,139 +1,78 @@
 #!/bin/bash
 
-# SM9 密钥生成脚本
-# 用法1: sm9keygen.sh -setup -type [sign|encrypt] -pass password -out master.pem [-pubout pubkey.pem]
-# 用法2: sm9keygen.sh -type [sign|encrypt] -master master.pem -pass password -id user_id -out output.pem [-outpass password]
+# 定义固定参数
+MASTER_KEY_PASS="P@ssw0rd"
+MASTER_SIGN_KEY_FILE="sm9sign_msk.pem"
+MASTER_ENC_KEY_FILE="sm9enc_msk.pem"
 
-TYPE=""
-MASTER_KEY=""
-MASTER_PASS=""
-USER_ID=""
-OUTPUT_FILE=""
-OUTPUT_PASS=""
-PUBOUT_FILE=""
-SETUP_MODE=false
-
-# 解析参数
-while [[ $# -gt 0 ]]; do
-    key="$1"
-    case $key in
-        -setup)
-            SETUP_MODE=true
-            shift
-            ;;
-        -type)
-            TYPE="$2"
-            shift 2
-            ;;
-        -master)
-            MASTER_KEY="$2"
-            shift 2
-            ;;
-        -pass)
-            MASTER_PASS="$2"
-            shift 2
-            ;;
-        -id)
-            USER_ID="$2"
-            shift 2
-            ;;
-        -out)
-            OUTPUT_FILE="$2"
-            shift 2
-            ;;
-        -outpass)
-            OUTPUT_PASS="$2"
-            shift 2
-            ;;
-        -pubout)
-            PUBOUT_FILE="$2"
-            shift 2
-            ;;
-        *)
-            echo "未知选项: $1"
-            exit 1
-            ;;
-    esac
-done
-
-# 检查 GmSSL 是否安装
-if ! command -v gmssl &> /dev/null; then
-    echo "GmSSL 工具未找到，请确保已安装 GmSSL 并添加到 PATH 中"
+# 检查参数
+if [ $# -lt 3 ]; then
+    echo "用法: $0 <alg> <user_id> <outpass>"
+    echo "参数说明:"
+    echo "  alg: sm9sign 或 sm9encrypt"
+    echo "  user_id: 用户标识"
+    echo "  outpass: 用户密钥的密码"
     exit 1
 fi
 
-# 根据模式执行不同的操作
-if [ "$SETUP_MODE" = true ]; then
-    # 主密钥生成模式
-    if [ -z "$TYPE" ] || [ -z "$MASTER_PASS" ] || [ -z "$OUTPUT_FILE" ]; then
-        echo "缺少必要参数"
-        echo "用法: sm9keygen.sh -setup -type [sign|encrypt] -pass password -out master.pem [-pubout pubkey.pem]"
-        exit 1
-    fi
-    
-    # 将类型参数转换为 GmSSL 使用的格式
-    if [ "$TYPE" = "sign" ]; then
-        SM9_ALG="sm9sign"
-    elif [ "$TYPE" = "encrypt" ]; then
-        SM9_ALG="sm9encrypt"
-    else
-        echo "无效的类型: $TYPE，必须是 sign 或 encrypt"
-        exit 1
-    fi
-    
-    # 调用 GmSSL 工具生成主密钥
-    echo "执行命令: gmssl sm9setup -alg $SM9_ALG -pass [PASSWORD] -out $OUTPUT_FILE"
-    
-    if [ -z "$PUBOUT_FILE" ]; then
-        gmssl sm9setup -alg $SM9_ALG -pass "$MASTER_PASS" -out "$OUTPUT_FILE"
-    else
-        gmssl sm9setup -alg $SM9_ALG -pass "$MASTER_PASS" -out "$OUTPUT_FILE" -pubout "$PUBOUT_FILE"
-    fi
-    
-    # 检查执行结果
-    if [ $? -eq 0 ]; then
-        echo "SM9 主密钥生成成功: $OUTPUT_FILE"
-        exit 0
-    else
-        echo "SM9 主密钥生成失败"
-        exit 1
-    fi
-    
+ALG=$1
+USER_ID=$2
+OUTPASS=$3
+
+# 根据算法设置主密钥文件和输出文件路径
+if [ "$ALG" = "sm9sign" ]; then
+    MASTER_KEY_FILE="$MASTER_SIGN_KEY_FILE"
+    OUT_FILE="sm9sign_${USER_ID}.pem"
+elif [ "$ALG" = "sm9encrypt" ]; then
+    MASTER_KEY_FILE="$MASTER_ENC_KEY_FILE"
+    OUT_FILE="sm9enc_${USER_ID}.pem"
 else
-    # 用户密钥生成模式
-    if [ -z "$TYPE" ] || [ -z "$MASTER_KEY" ] || [ -z "$MASTER_PASS" ] || [ -z "$USER_ID" ] || [ -z "$OUTPUT_FILE" ]; then
-        echo "缺少必要参数"
-        echo "用法: sm9keygen.sh -type [sign|encrypt] -master master.pem -pass password -id user_id -out output.pem [-outpass password]"
+    echo "Error: algorithm must be sm9sign or sm9encrypt"
+    exit 1
+fi
+
+# 如果主密钥不存在，则生成主密钥
+if [ ! -f "$MASTER_KEY_FILE" ]; then
+    echo "Master key file not found. Generating master key..."
+    gmssl sm9setup -alg "$ALG" -pass "$MASTER_KEY_PASS" -out "$MASTER_KEY_FILE"
+    echo "Master key generated successfully: $MASTER_KEY_FILE"
+else
+    echo "Master key already exists: $MASTER_KEY_FILE"
+        # 命令执行失败处理
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to execute master key generation command."
         exit 1
     fi
-    
-    # 将类型参数转换为 GmSSL 使用的格式
-    if [ "$TYPE" = "sign" ]; then
-        SM9_ALG="sm9sign"
-    elif [ "$TYPE" = "encrypt" ]; then
-        SM9_ALG="sm9encrypt"
-    else
-        echo "无效的类型: $TYPE，必须是 sign 或 encrypt"
+
+    # 判断文件是否真正创建成功
+    if [ ! -s "$MASTER_KEY_FILE" ]; then
+        echo "Error: Master key file was not created successfully."
         exit 1
     fi
-    
-    # 如果没有指定输出密码，使用主密钥密码
-    if [ -z "$OUTPUT_PASS" ]; then
-        OUTPUT_PASS="$MASTER_PASS"
-    fi
-    
-    # 调用 GmSSL 工具生成用户密钥
-    echo "执行命令: gmssl sm9keygen -alg $SM9_ALG -in $MASTER_KEY -inpass [PASSWORD] -id $USER_ID -out $OUTPUT_FILE -outpass [PASSWORD]"
-    
-    gmssl sm9keygen -alg $SM9_ALG -in "$MASTER_KEY" -inpass "$MASTER_PASS" -id "$USER_ID" -out "$OUTPUT_FILE" -outpass "$OUTPUT_PASS"
-    
-    # 检查执行结果
-    if [ $? -eq 0 ]; then
-        echo "SM9 用户密钥生成成功: $OUTPUT_FILE"
-        echo "$OUTPUT_PASS" > "${OUTPUT_FILE}.pass"
-        exit 0
-    else
-        echo "SM9 用户密钥生成失败"
-        exit 1
-    fi
-fi 
+fi
+
+
+# 如果用户密钥已存在则直接跳过
+if [ -f "$OUT_FILE" ]; then
+    echo "User key already exists: $OUT_FILE"
+    exit 0
+fi
+
+# 生成用户密钥
+echo "Generating user key..."
+gmssl sm9keygen -alg "$ALG" \
+    -in "$MASTER_KEY_FILE" \
+    -inpass "$MASTER_KEY_PASS" \
+    -id "$USER_ID" \
+    -out "$OUT_FILE" \
+    -outpass "$OUTPASS"
+
+
+
+# 判断用户密钥是否写入成功
+if [ ! -s "$OUT_FILE" ]; then
+    echo "Error: User key file was not created successfully."
+    exit 1
+fi
+
+echo "User key generated successfully: $OUT_FILE"

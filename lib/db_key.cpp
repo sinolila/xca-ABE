@@ -22,6 +22,7 @@
 #include <QDir>
 #include <QDateTime>
 #include <openssl/bio.h>
+#include <QCoreApplication>
 
 db_key::db_key() : db_base("keys")
 {
@@ -156,7 +157,7 @@ pki_key *db_key::newKey(const keyjob &job, const QString &name)
 {
 	// 处理 SM9 密钥
 	if (job.isSM9()) {
-		return newSM9Key(job, name);
+		return newIdentKey(job, name);
 	}
 	
 	pki_key *key = NULL;
@@ -192,6 +193,7 @@ pki_key *db_key::newKey(const keyjob &job, const QString &name)
 	}
 	return key;
 }
+
 
 int db_key::exportFlags(const QModelIndex &index) const
 {
@@ -314,108 +316,189 @@ void db_key::setOwnPass(QModelIndex idx, enum pki_key::passType x)
 }
 
 // 处理 SM9 密钥生成
-pki_key *db_key::newSM9Key(const keyjob &job, const QString &name)
+pki_key *db_key::newIdentKey(const keyjob &job, const QString &name)
 {
-	if (job.sm9Type.isEmpty() || job.masterKeyPass.isEmpty() || job.userId.isEmpty()) {
-		QMessageBox::warning(NULL, XCA_TITLE, tr("SM9 参数不完整"));
+	qDebug() << "Starting SM9 key generation with parameters:";
+	qDebug() << "  Type:" << job.sm9Type;
+	qDebug() << "  User ID:" << job.userId;
+	qDebug() << "  Name:" << name;
+
+	if (job.sm9Type.isEmpty() || job.userId.isEmpty()) {
+		qDebug() << "Error: SM9 parameters incomplete";
+		QMessageBox::warning(NULL, XCA_TITLE, tr("SM9 parameters incomplete"));
 		return NULL;
 	}
 	
-	// 创建临时目录
+	// 检查GmSSL是否可用
+	{
+		QProcess process;
+		process.start("gmssl", QStringList() << "version");
+		if (!process.waitForStarted(3000) || !process.waitForFinished(3000)) {
+			qDebug() << "Error: GmSSL not available";
+			QMessageBox::warning(NULL, XCA_TITLE, 
+				tr("GmSSL not found. Please ensure GmSSL is installed and added to PATH."));
+			return NULL;
+		}
+		qDebug() << "GmSSL version:" << QString::fromUtf8(process.readAll()).trimmed();
+	}
+	
+	// 设置sm9keygen.sh脚本路径
+	QStringList searchPaths;
+	QString appDir = QCoreApplication::applicationDirPath();
+	qDebug() << "Application directory:" << appDir;
+	
+	searchPaths << appDir + "/misc/sm9keygen.sh"               // 应用程序目录下的misc
+			   << appDir + "/../misc/sm9keygen.sh"             // 上级目录的misc
+			   << appDir + "/../share/xca/misc/sm9keygen.sh"   // 标准安装位置
+			   << "/usr/share/xca/misc/sm9keygen.sh"           // Linux系统标准位置
+			   << "/usr/local/share/xca/misc/sm9keygen.sh"     // Linux本地安装位置
+			   << appDir + "/share/xca/misc/sm9keygen.sh"      // 另一种可能的路径
+			   << appDir + "/../share/misc/sm9keygen.sh"       // 另一种可能的路径
+			   << "../misc/sm9keygen.sh"                       // 相对于工作目录
+			   << "misc/sm9keygen.sh";                         // 项目目录
+	
+	// 调试信息：记录所有可能的脚本路径
+	qDebug() << "SM9 script search paths:";
+	foreach (const QString &path, searchPaths) {
+		qDebug() << "  Checking path:" << path << "exists:" << QFile::exists(path);
+	}
+	
+	QString scriptPath;
+	foreach (const QString &path, searchPaths) {
+		if (QFile::exists(path)) {
+			scriptPath = path;
+			qDebug() << "Found SM9 script at:" << scriptPath;
+			break;
+		}
+	}
+	
+	if (scriptPath.isEmpty()) {
+		// 脚本未找到，显示当前应用程序信息
+		qDebug() << "Application directory:" << appDir;
+		qDebug() << "Current working directory:" << QDir::currentPath();
+		
+		// 列出当前目录下的文件
+		QDir currentDir = QDir::current();
+		qDebug() << "Files in current directory:" << currentDir.entryList(QDir::Files);
+		
+		// 尝试列出misc目录下的文件
+		QDir miscDir(appDir + "/misc");
+		if (miscDir.exists()) {
+			qDebug() << "Files in" << miscDir.path() << ":" << miscDir.entryList(QDir::Files);
+		}
+		
+		QMessageBox::warning(NULL, XCA_TITLE, 
+			tr("SM9 key generation script not found, please ensure correct installation"));
+		return NULL;
+	}
+	
+	// 设置脚本执行权限
+	QProcess::execute("chmod", QStringList() << "+x" << scriptPath);
+	
+	// 创建临时目录用于存储生成的密钥
 	QString tempDir = QDir::tempPath() + "/xca_sm9_" + 
 					 QString::number(QDateTime::currentMSecsSinceEpoch());
 	QDir().mkpath(tempDir);
 	
-	// 设置文件路径
-	QString masterKeyPath = tempDir + "/master_key.pem";
+	// 设置用户密钥输出路径
 	QString userKeyPath = tempDir + "/user_key.pem";
 	
-	// 构建 sm9setup 命令参数
-	QStringList setupArgs;
-	setupArgs << "sm9setup" 
-			  << "-alg" << job.sm9Type
-			  << "-pass" << job.masterKeyPass
-			  << "-out" << masterKeyPath;
+	// 构建脚本参数 - 按照新脚本格式修改
+	QStringList args;
 	
-	// 执行 sm9setup 命令
-	QProcess setupProcess;
-	setupProcess.start("gmssl", setupArgs);
+	// 直接添加参数，无需使用 -type 等标志
+	args << job.sm9Type;
+	args << job.userId;
+	args << job.masterKeyPass;
 	
-	if (!setupProcess.waitForFinished(30000)) {
-		setupProcess.kill();
-		QMessageBox::warning(NULL, XCA_TITLE, tr("SM9 主密钥生成失败"));
+	// 输出调试信息
+	qDebug() << "Running SM9 script:" << scriptPath;
+	qDebug() << "Arguments:" << args;
+	qDebug() << "Working directory:" << tempDir;
+	
+	// 执行脚本命令
+	QProcess process;
+	process.setWorkingDirectory(tempDir);  // 设置工作目录
+	process.setProcessChannelMode(QProcess::MergedChannels); // 合并标准输出和错误输出
+	process.start("bash", QStringList() << scriptPath << args);
+	
+	if (!process.waitForStarted(5000)) {
+		QMessageBox::warning(NULL, XCA_TITLE, 
+			tr("SM9 key generation process failed to start"));
 		QDir(tempDir).removeRecursively();
 		return NULL;
 	}
 	
-	// 检查主密钥文件
-	if (!QFile::exists(masterKeyPath)) {
-		QMessageBox::warning(NULL, XCA_TITLE, tr("未找到生成的 SM9 主密钥文件"));
+	if (!process.waitForFinished(30000)) {
+		process.kill();
+		QMessageBox::warning(NULL, XCA_TITLE, tr("SM9 key generation timeout"));
 		QDir(tempDir).removeRecursively();
 		return NULL;
 	}
 	
-	// 构建 sm9keygen 命令参数
-	QStringList keygenArgs;
-	keygenArgs << "sm9keygen" 
-			   << "-alg" << job.sm9Type
-			   << "-in" << masterKeyPath
-			   << "-inpass" << job.masterKeyPass
-			   << "-id" << job.userId
-			   << "-out" << userKeyPath
-			   << "-outpass" << job.masterKeyPass;
+	// 读取脚本输出
+	QString scriptOutput = QString::fromUtf8(process.readAll());
+	qDebug() << "Script output:" << scriptOutput;
 	
-	// 执行 sm9keygen 命令
-	QProcess keygenProcess;
-	keygenProcess.start("gmssl", keygenArgs);
+	// 检查脚本是否成功执行
+	int exitCode = process.exitCode();
+	qDebug() << "Script exit code:" << exitCode;
 	
-	if (!keygenProcess.waitForFinished(30000)) {
-		keygenProcess.kill();
-		QMessageBox::warning(NULL, XCA_TITLE, tr("SM9 用户密钥生成失败"));
+	if (exitCode != 0) {
+		QMessageBox::warning(NULL, XCA_TITLE, 
+						   tr("SM9 key generation failed: %1").arg(scriptOutput));
 		QDir(tempDir).removeRecursively();
 		return NULL;
 	}
 	
-	// 检查用户密钥文件
-	if (!QFile::exists(userKeyPath)) {
-		QMessageBox::warning(NULL, XCA_TITLE, tr("未找到生成的 SM9 用户密钥文件"));
-		QDir(tempDir).removeRecursively();
-		return NULL;
+	// 获取生成的密钥文件路径
+	QString generatedKeyFile;
+	if (job.sm9Type == "sm9sign") {
+		generatedKeyFile = tempDir + "/sm9sign_" + job.userId + ".pem";
+	} else {
+		generatedKeyFile = tempDir + "/sm9enc_" + job.userId + ".pem";
 	}
 	
-	try {
-		// 导入主密钥
-		BIO *bio_master = BIO_new_file(masterKeyPath.toUtf8().constData(), "r");
-		if (!bio_master) {
-			QMessageBox::warning(NULL, XCA_TITLE, tr("无法打开主密钥文件"));
-			QDir(tempDir).removeRecursively();
-			return NULL;
-		}
-		pki_evp *masterKey = new pki_evp(name + "_主密钥");
-		masterKey->fromPEM_BIO(bio_master, job.masterKeyPass.toUtf8().constData());
-		BIO_free(bio_master);
-		insert(masterKey);
+	// 检查文件是否存在
+	if (!QFile::exists(generatedKeyFile)) {
+		qDebug() << "Expected key file not found:" << generatedKeyFile;
+		qDebug() << "Files in temp directory:" << QDir(tempDir).entryList(QDir::Files);
 		
+		QMessageBox::warning(NULL, XCA_TITLE, 
+			tr("Generated key file not found: %1").arg(generatedKeyFile));
+		QDir(tempDir).removeRecursively();
+		return NULL;
+	}
+	
+	// 后续导入密钥到数据库流程...
+	try {
 		// 导入用户密钥
-		BIO *bio_user = BIO_new_file(userKeyPath.toUtf8().constData(), "r");
+		BIO *bio_user = BIO_new_file(generatedKeyFile.toUtf8().constData(), "r");
 		if (!bio_user) {
-			QMessageBox::warning(NULL, XCA_TITLE, tr("无法打开用户密钥文件"));
+			QMessageBox::warning(NULL, XCA_TITLE, tr("Cannot open user key file"));
 			QDir(tempDir).removeRecursively();
 			return NULL;
 		}
 		pki_evp *userKey = new pki_evp(name);
 		userKey->fromPEM_BIO(bio_user, job.masterKeyPass.toUtf8().constData());
 		BIO_free(bio_user);
-		insert(userKey);
+		userKey = dynamic_cast<pki_evp*>(insert(userKey));
 		
 		// 删除临时文件
 		QDir(tempDir).removeRecursively();
 		
+		// 通知密钥生成完成
+		if (userKey) {
+			emit keyDone(userKey);
+			createSuccess(userKey);
+		}
+		
 		return userKey;
 	} catch (errorEx &err) {
 		QMessageBox::warning(NULL, XCA_TITLE, 
-						   tr("无法导入生成的密钥: %1").arg(err.getString()));
+						   tr("Failed to import generated key: %1").arg(err.getString()));
 		QDir(tempDir).removeRecursively();
 		return NULL;
 	}
 }
+

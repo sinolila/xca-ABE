@@ -87,7 +87,7 @@ NewIdentKey::NewIdentKey(QWidget *parent, const QString &name)
 	setupUi(this);
 	setWindowTitle(XCA_TITLE);
 	image->setPixmap(QPixmap(":keyImg"));
-	mainwin->helpdlg->register_ctxhelp_button(this, "keygen");
+	setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
 	if (!name.isEmpty())
 		keyDesc->setText(name);
@@ -158,11 +158,6 @@ NewIdentKey::NewIdentKey(QWidget *parent, const QString &name)
 	// 初始化UI显示
 	updateSM9WidgetVisibility();
 	
-	// 检查GmSSL是否安装
-	if (isSM9Selected() && !checkGmSSLInstalled()) {
-		QMessageBox::warning(this, XCA_TITLE, 
-			tr("GmSSL tool not detected. Please ensure GmSSL is installed and added to PATH environment variable, otherwise SM9 keys cannot be generated."));
-	}
 }
 
 void NewIdentKey::setupSM9UI()
@@ -173,20 +168,19 @@ void NewIdentKey::setupSM9UI()
 	gridLayout2->setContentsMargins(0, 0, 0, 0);  // 减少边距以保持与上方标签的对齐
 	
 	// 创建标签和输入框
-	masterKeyPassLabel = new QLabel(tr("Master Key Password:"), sm9Widget);
-	masterKeyPass = new QLineEdit(sm9Widget);
-	masterKeyPass->setEchoMode(QLineEdit::Password);
-	
 	idLabel = new QLabel(tr("User ID:"), sm9Widget);
 	idInput = new QLineEdit(sm9Widget);
 	
+	masterKeyPassLabel = new QLabel(tr("User Password:"), sm9Widget);
+	masterKeyPass = new QLineEdit(sm9Widget);
+	masterKeyPass->setEchoMode(QLineEdit::Password);
+	
 	// 添加控件到网格布局，确保标签在左边一列，输入框在右边一列
 	// 这与UI文件中的布局方式一致
-	gridLayout2->addWidget(masterKeyPassLabel, 0, 0);
-	gridLayout2->addWidget(masterKeyPass, 0, 1);
-	gridLayout2->addWidget(idLabel, 1, 0);
-	gridLayout2->addWidget(idInput, 1, 1);
-	
+	gridLayout2->addWidget(idLabel, 0, 0);
+	gridLayout2->addWidget(idInput, 0, 1);
+	gridLayout2->addWidget(masterKeyPassLabel, 1, 0);
+	gridLayout2->addWidget(masterKeyPass, 1, 1);
 	// 设置第1列（输入框所在列）可伸展
 	gridLayout2->setColumnStretch(1, 1);
 	
@@ -279,6 +273,12 @@ keyjob NewIdentKey::getKeyJob() const
 	if (job.ktype.isSM9()) {
 		job.masterKeyPass = masterKeyPass->text();
 		job.userId = idInput->text();
+		// 根据密钥类型设置SM9类型
+		if (job.ktype.type == EVP_PKEY_SM9_SIGN) {
+			job.sm9Type = "sm9sign";
+		} else if (job.ktype.type == EVP_PKEY_SM9_ENC) {
+			job.sm9Type = "sm9encrypt";
+		}
 	}
 	
 	return job;
@@ -311,6 +311,9 @@ void NewIdentKey::accept()
 
 bool NewIdentKey::generateSM9Key(const QString &keyName, QString &errorMsg)
 {
+	qDebug() << "Starting SM9 key generation...";
+	qDebug() << "Key Name:" << keyName;
+	
 	// 验证输入
 	QString masterKeyPassword = masterKeyPass->text();
 	QString userId = idInput->text();
@@ -325,189 +328,30 @@ bool NewIdentKey::generateSM9Key(const QString &keyName, QString &errorMsg)
 		return false;
 	}
 	
-	// 直接从当前选择的密钥类型获取SM9类型
+	// 获取SM9类型
 	int idx = keyType->currentIndex();
 	QVariant q = keyType->itemData(idx);
+	if (!q.isValid()) {
+		errorMsg = tr("Invalid key type selected");
+		return false;
+	}
+	
 	keyListItem currentItem = q.value<keyListItem>();
+	QString sm9Type = (currentItem.ktype.type == EVP_PKEY_SM9_SIGN) ? "sm9sign" : "sm9encrypt";
 	
-	// 根据密钥类型确定是签名还是加密
-	QString sm9Type = (currentItem.ktype.type == EVP_PKEY_SM9_SIGN) ? "sign" : "encrypt";
+	// 创建keyjob对象
+	keyjob job;
+	job.ktype = currentItem.ktype;
+	job.sm9Type = sm9Type;
+	job.userId = userId;
+	job.masterKeyPass = masterKeyPassword;
 	
-	// 查找脚本 - 需要修改此部分以正确查找项目目录中的脚本
-	QStringList searchPaths;
-	
-	// 添加可能的脚本路径
-	QString appDir = QCoreApplication::applicationDirPath();
-	searchPaths << appDir + "/misc/sm9keygen.sh"               // 应用程序目录下的misc
-			   << appDir + "/../misc/sm9keygen.sh"             // 上级目录的misc
-			   << appDir + "/../share/xca/misc/sm9keygen.sh"   // 标准安装位置
-			   << "../misc/sm9keygen.sh"                       // 相对于工作目录
-			   << "misc/sm9keygen.sh";                         // 项目目录
-	
-	QString scriptPath;
-	foreach (const QString &path, searchPaths) {
-		if (QFile::exists(path)) {
-			scriptPath = path;
-			break;
-		}
-	}
-	
-	if (scriptPath.isEmpty()) {
-		errorMsg = tr("SM9 key generation script not found, please ensure correct installation");
+	// 调用db_key的newIdentKey方法生成密钥
+	pki_key *key = Database.model<db_key>()->newIdentKey(job, keyName);
+	if (!key) {
+		errorMsg = tr("Failed to generate SM9 key");
 		return false;
 	}
 	
-	// 设置脚本执行权限
-	QProcess::execute("chmod", QStringList() << "+x" << scriptPath);
-	
-	// 创建临时目录
-	QString tempDir = QDir::tempPath() + "/xca_sm9_" + 
-					 QString::number(QDateTime::currentMSecsSinceEpoch());
-	QDir().mkpath(tempDir);
-	
-	// 创建临时输出文件路径
-	QString masterKeyPath = tempDir + "/sm9_master.pem";
-	QString userKeyPath = tempDir + "/sm9_user.pem";
-	
-	// 构建命令行调用 - 生成主密钥
-	QStringList setupArgs;
-	setupArgs << scriptPath
-			  << "-setup"
-			  << "-type" << sm9Type  // 使用从密钥类型确定的SM9类型
-			  << "-pass" << masterKeyPassword
-			  << "-out" << masterKeyPath;
-	
-	// 输出调试信息，帮助诊断
-	qDebug() << "SM9 Key Generation command: " << "bash" << setupArgs.join(" ");
-	
-	// 执行生成主密钥命令
-	QProcess setupProcess;
-	setupProcess.setProcessChannelMode(QProcess::MergedChannels); // 合并输出流，便于调试
-	setupProcess.start("/bin/bash", setupArgs);
-	
-	if (!setupProcess.waitForStarted(5000)) {
-		errorMsg = tr("Unable to start SM9 key generation script for master key");
-		QDir(tempDir).removeRecursively();
-		return false;
-	}
-	
-	if (!setupProcess.waitForFinished(30000)) {
-		setupProcess.kill();
-		errorMsg = tr("SM9 master key generation timeout");
-		QDir(tempDir).removeRecursively();
-		return false;
-	}
-	
-	// 检查命令执行结果
-	if (setupProcess.exitCode() != 0) {
-		QString output = QString::fromUtf8(setupProcess.readAll());
-		qDebug() << "SM9 master key generation error:";
-		qDebug() << output;
-		errorMsg = tr("SM9 master key generation failed:\n%1").arg(output);
-		QDir(tempDir).removeRecursively();
-		return false;
-	}
-	
-	// 检查主密钥文件是否存在
-	if (!QFile::exists(masterKeyPath)) {
-		errorMsg = tr("Generated SM9 master key file not found");
-		QDir(tempDir).removeRecursively();
-		return false;
-	}
-	
-	// 构建命令行调用 - 生成用户密钥
-	QStringList keygenArgs;
-	keygenArgs << scriptPath
-			   << "-type" << sm9Type  // 使用从密钥类型确定的SM9类型
-			   << "-master" << masterKeyPath
-			   << "-pass" << masterKeyPassword
-			   << "-id" << userId
-			   << "-out" << userKeyPath;
-	
-	QProcess keygenProcess;
-	keygenProcess.start("/bin/bash", keygenArgs);
-	
-	if (!keygenProcess.waitForStarted(5000)) {
-		errorMsg = tr("Unable to start SM9 key generation script for user key");
-		QDir(tempDir).removeRecursively();
-		return false;
-	}
-	
-	if (!keygenProcess.waitForFinished(30000)) {
-		keygenProcess.kill();
-		errorMsg = tr("SM9 user key generation timeout");
-		QDir(tempDir).removeRecursively();
-		return false;
-	}
-	
-	// 检查命令执行结果
-	if (keygenProcess.exitCode() != 0) {
-		QString stdErr = QString::fromUtf8(keygenProcess.readAllStandardError());
-		QString stdOut = QString::fromUtf8(keygenProcess.readAllStandardOutput());
-		errorMsg = tr("SM9 user key generation failed:\n%1\n%2").arg(stdErr).arg(stdOut);
-		QDir(tempDir).removeRecursively();
-		return false;
-	}
-	
-	// 检查用户密钥文件是否存在
-	if (!QFile::exists(userKeyPath)) {
-		errorMsg = tr("Generated SM9 user key file not found");
-		QDir(tempDir).removeRecursively();
-		return false;
-	}
-	
-	// 将生成的密钥导入 XCA 数据库
-	try {
-		// 导入主密钥
-		BIO *bio_master = BIO_new_file(masterKeyPath.toUtf8().constData(), "r");
-		if (!bio_master) {
-			errorMsg = tr("Unable to open master key file");
-			QDir(tempDir).removeRecursively();
-			return false;
-		}
-		pki_evp *masterKey = new pki_evp(keyName + "_主密钥");
-		masterKey->fromPEM_BIO(bio_master, masterKeyPassword.toUtf8().constData());
-		BIO_free(bio_master);
-		Database.model<db_key>()->insert(masterKey);
-		
-		// 导入用户密钥
-		BIO *bio_user = BIO_new_file(userKeyPath.toUtf8().constData(), "r");
-		if (!bio_user) {
-			errorMsg = tr("Unable to open user key file");
-			QDir(tempDir).removeRecursively();
-			return false;
-		}
-		pki_evp *userKey = new pki_evp(keyName);
-		userKey->fromPEM_BIO(bio_user, masterKeyPassword.toUtf8().constData());
-		BIO_free(bio_user);
-		Database.model<db_key>()->insert(userKey);
-		
-		// 删除临时文件
-		QDir(tempDir).removeRecursively();
-		
-		return true;
-	} catch (errorEx &err) {
-		errorMsg = tr("Unable to import generated key: %1").arg(err.getString());
-		QDir(tempDir).removeRecursively();
-		return false;
-	}
+	return true;
 }
-
-bool NewIdentKey::checkGmSSLInstalled()
-{
-	QProcess process;
-	process.start("gmssl", QStringList() << "version");
-	
-	if (!process.waitForStarted(3000)) {
-		return false;
-	}
-	
-	if (!process.waitForFinished(3000)) {
-		process.kill();
-		return false;
-	}
-	
-	return process.exitCode() == 0;
-}
-
-

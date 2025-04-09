@@ -55,10 +55,10 @@ if (UNIX AND NOT APPLE)
   install(FILES ${TEXT_FILES} ${XCA_TEMPLATES}
         DESTINATION ${CMAKE_INSTALL_DATADIR}/${CMAKE_PROJECT_NAME}
   )
-  install(FILES ${S}/sm9keygen.sh
-        DESTINATION ${CMAKE_INSTALL_BINDIR}
+      # 安装SM9密钥生成脚本
+  install(FILES misc/sm9keygen.sh
         PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
-  )
+        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/xca/misc)
   install(FILES misc/de.hohnstaedt.xca.desktop
         DESTINATION ${CMAKE_INSTALL_DATADIR}/applications
   )
