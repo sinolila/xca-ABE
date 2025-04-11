@@ -200,7 +200,7 @@ void MainWindow::setItemEnabled(bool enable)
 
 void MainWindow::init_images()
 {
-	bigIdnetKey->setPixmap(QPixmap(":keyImg"));
+	bigIdentKey->setPixmap(QPixmap(":keyImg"));
 	bigKey->setPixmap(QPixmap(":keyImg"));
 	bigCsr->setPixmap(QPixmap(":csrImg"));
 	bigCert->setPixmap(QPixmap(":certImg"));
@@ -653,7 +653,7 @@ enum open_result MainWindow::setup_open_database()
 				break;
 		}
 	}
-	identkeyView->setModel(Database.model<db_key>());
+	identkeyView->setModel(Database.model<db_sm9>());
 	keyView->setModel(Database.model<db_key>());
 	reqView->setModel(Database.model<db_x509req>());
 	certView->setModel(Database.model<db_x509>());

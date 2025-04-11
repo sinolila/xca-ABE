@@ -95,7 +95,7 @@
             </spacer>
            </item>
            <item>
-            <widget class="QLabel" name="bigIdnetKey">
+            <widget class="QLabel" name="bigIdentKey">
              <property name="minimumSize">
               <size>
                <width>200</width>

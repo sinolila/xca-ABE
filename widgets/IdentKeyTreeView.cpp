@@ -187,22 +187,12 @@ void IdentKeyTreeView::newItem(const QString &name)
 	if (dlg->exec()) {
 		keyjob job = dlg->getKeyJob();
 		
-		// 检查SM9参数是否完整
-		if (job.ktype.isSM9()) {
-			if (job.sm9Type.isEmpty() || job.userId.isEmpty()) {
-				QMessageBox::warning(this, XCA_TITLE, 
-					tr("SM9 parameters incomplete. Please fill in all required fields."));
-				delete dlg;
-				return;
-			}
-		}
-		
-		// 处理IBC密钥
-		pki_key *key = keys()->newIdentKey(job, dlg->keyDesc->text());
-		if (!key) {
-			QMessageBox::warning(this, XCA_TITLE, 
-				tr("Failed to generate key. Please check the parameters and try again."));
-		}
+		// 处理SM9密钥
+		pki_key *key = keys()->newSM9Key(job, dlg->keyDesc->text());
+		// if (!key) {
+		// 	QMessageBox::warning(this, XCA_TITLE, 
+		// 		tr("Failed to generate key. Please check the parameters and try again."));
+		// }
 	}
 	delete dlg;
 }

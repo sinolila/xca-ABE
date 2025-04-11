@@ -31,6 +31,7 @@
 #include "db_crl.h"
 #include "db_x509req.h"
 #include "db_temp.h"
+#include "db_sm9.h"
 
 xca_db Database;
 
@@ -192,6 +193,7 @@ database_model::database_model(const QString &name, const Passwd &pass)
 	models << new db_x509();
 	models << new db_crl();
 	models << new db_temp();
+	models << new db_sm9();
 
 	if (dbkey)
 		dbkey->updateKeyEncryptionScheme();

@@ -1,4 +1,3 @@
-
 list(APPEND xcadoc_sources arguments.cpp arguments.h xcadoc.cpp)
 list(APPEND xcaexport_sources pki_export.cpp pki_export.h xcaexport.cpp)
 
@@ -39,7 +38,7 @@ XcaProgress.h		XcaWarningCore.cpp	XcaWarningCore.h
 PwDialogCore.cpp	PwDialogCore.h		digest.h
 digest.cpp		pki_export.cpp		debug_info.h
 func_base.cpp		func_base.h		debug_info.cpp
-cmdline.cpp 
+cmdline.cpp  db_sm9.cpp db_sm9.h
 )
 
 macro(ExpandSources target)
@@ -75,3 +74,12 @@ if(BUILD_TESTING)
                                     BioByteArray.h BioByteArray.cpp )
   Test(test_digest digest.cpp digest.h func_base.cpp func_base.h)
 endif()
+
+# �����򻯰�SM9���Գ���
+add_executable(sm9_simple_test ${PROJECT_SOURCE_DIR}/lib/test_sm9_simple.cpp)
+target_link_libraries(sm9_simple_test PRIVATE
+  ${QT}::Core
+)
+set_target_properties(sm9_simple_test PROPERTIES 
+  RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
+)

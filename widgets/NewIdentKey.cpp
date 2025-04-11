@@ -171,16 +171,17 @@ void NewIdentKey::setupSM9UI()
 	idLabel = new QLabel(tr("User ID:"), sm9Widget);
 	idInput = new QLineEdit(sm9Widget);
 	
-	masterKeyPassLabel = new QLabel(tr("User Password:"), sm9Widget);
-	masterKeyPass = new QLineEdit(sm9Widget);
-	masterKeyPass->setEchoMode(QLineEdit::Password);
+	idKeyPassLabel = new QLabel(tr("User Password:"), sm9Widget);
+	idKeyPass = new QLineEdit(sm9Widget);
+	idKeyPass->setEchoMode(QLineEdit::Password);
 	
 	// 添加控件到网格布局，确保标签在左边一列，输入框在右边一列
 	// 这与UI文件中的布局方式一致
 	gridLayout2->addWidget(idLabel, 0, 0);
 	gridLayout2->addWidget(idInput, 0, 1);
-	gridLayout2->addWidget(masterKeyPassLabel, 1, 0);
-	gridLayout2->addWidget(masterKeyPass, 1, 1);
+	
+	gridLayout2->addWidget(idKeyPassLabel, 1, 0);
+	gridLayout2->addWidget(idKeyPass, 1, 1);
 	// 设置第1列（输入框所在列）可伸展
 	gridLayout2->setColumnStretch(1, 1);
 	
@@ -271,14 +272,26 @@ keyjob NewIdentKey::getKeyJob() const
 	
 	// 设置 SM9 相关参数
 	if (job.ktype.isSM9()) {
-		job.masterKeyPass = masterKeyPass->text();
+		qDebug() << "Setting SM9 parameters:";
+		qDebug() << "  Key Type Name:" << job.ktype.name;
+		qDebug() << "  Key Type Value:" << job.ktype.type;
+		
+		job.idKeyPass = idKeyPass->text();
 		job.userId = idInput->text();
+		
 		// 根据密钥类型设置SM9类型
 		if (job.ktype.type == EVP_PKEY_SM9_SIGN) {
 			job.sm9Type = "sm9sign";
+			qDebug() << "  Setting type to sm9sign";
 		} else if (job.ktype.type == EVP_PKEY_SM9_ENC) {
 			job.sm9Type = "sm9encrypt";
+			qDebug() << "  Setting type to sm9encrypt";
 		}
+		
+		qDebug() << "Final SM9 parameters:";
+		qDebug() << "  SM9 Type:" << job.sm9Type;
+		qDebug() << "  User ID:" << job.userId;
+		qDebug() << "  Password:" << job.idKeyPass;
 	}
 	
 	return job;
@@ -286,7 +299,7 @@ keyjob NewIdentKey::getKeyJob() const
 
 void NewIdentKey::accept()
 {
-	QString name = keyDesc->text();
+	QString name = keyDesc->text();//实质是内部名称
 	if (name.isEmpty()) {
 		QMessageBox::warning(this, XCA_TITLE, tr("Please enter key description"));
 		return;
@@ -315,10 +328,10 @@ bool NewIdentKey::generateSM9Key(const QString &keyName, QString &errorMsg)
 	qDebug() << "Key Name:" << keyName;
 	
 	// 验证输入
-	QString masterKeyPassword = masterKeyPass->text();
+	QString idKeyPassword = idKeyPass->text();
 	QString userId = idInput->text();
 	
-	if (masterKeyPassword.isEmpty()) {
+	if (idKeyPassword.isEmpty()) {
 		errorMsg = tr("Please enter master key password");
 		return false;
 	}
@@ -328,7 +341,7 @@ bool NewIdentKey::generateSM9Key(const QString &keyName, QString &errorMsg)
 		return false;
 	}
 	
-	// 获取SM9类型
+	// 从下拉列表获取SM9类型
 	int idx = keyType->currentIndex();
 	QVariant q = keyType->itemData(idx);
 	if (!q.isValid()) {
@@ -337,21 +350,33 @@ bool NewIdentKey::generateSM9Key(const QString &keyName, QString &errorMsg)
 	}
 	
 	keyListItem currentItem = q.value<keyListItem>();
-	QString sm9Type = (currentItem.ktype.type == EVP_PKEY_SM9_SIGN) ? "sm9sign" : "sm9encrypt";
+	
+	// 确保使用正确的字符串格式作为参数传递给脚本
+	QString sm9Type;
+	if (currentItem.ktype.type == EVP_PKEY_SM9_SIGN) {
+		sm9Type = "sm9sign";
+	} else if (currentItem.ktype.type == EVP_PKEY_SM9_ENC) {
+		sm9Type = "sm9encrypt";
+	} else {
+		errorMsg = tr("Invalid SM9 key type");
+		return false;
+	}
+	
+	qDebug() << "Using SM9 type:" << sm9Type;
 	
 	// 创建keyjob对象
 	keyjob job;
 	job.ktype = currentItem.ktype;
-	job.sm9Type = sm9Type;
+	job.sm9Type = sm9Type;  // 使用确定的字符串格式
 	job.userId = userId;
-	job.masterKeyPass = masterKeyPassword;
+	job.idKeyPass = idKeyPassword;
 	
-	// 调用db_key的newIdentKey方法生成密钥
-	pki_key *key = Database.model<db_key>()->newIdentKey(job, keyName);
-	if (!key) {
-		errorMsg = tr("Failed to generate SM9 key");
-		return false;
-	}
+	// 调用db_sm9的newSM9Key方法生成密钥
+	pki_key *key = Database.model<db_sm9>()->newSM9Key(job, keyName);
+	// if (!key) {
+	// 	errorMsg = tr("Failed to generate SM9 key");
+	// 	return false;
+	// }
 	
 	return true;
 }

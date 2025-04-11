@@ -24,8 +24,8 @@ class NewIdentKey: public QDialog, public Ui::NewKey
 		void populateIBCParameters();
 		QLabel *idLabel;
 		QLineEdit *idInput;
-		QLabel *masterKeyPassLabel;
-		QLineEdit *masterKeyPass;
+		QLabel *idKeyPassLabel;
+		QLineEdit *idKeyPass;
 		QWidget *sm9Widget;
 		void setupSM9UI();
 		bool isSM9Selected();

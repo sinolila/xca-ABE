@@ -58,7 +58,10 @@ void db_base::createSuccess(const pki_base *pki) const
 	if (Settings["suppress_messages"])
 		return;
 
-	XCA_INFO(pki->getMsg(pki_base::msg_create).arg(pki->getIntName()));
+	QString msg = pki->getMsg(pki_base::msg_create);
+	if (msg.contains("%1"))
+		msg = msg.arg(pki->getIntName());
+	XCA_INFO(msg);
 }
 
 void db_base::remFromCont(const QModelIndex &idx)

@@ -9,16 +9,16 @@
 #define __IDENTKEYTREEVIEW_H
 
 #include "XcaTreeView.h"
-#include "lib/db_key.h"
+#include "lib/db_sm9.h"
 
 class QAction;
 class IdentKeyTreeView: public XcaTreeView
 {
 	Q_OBJECT
 
-	db_key *keys() const
+	db_sm9 *keys() const
 	{
-		return dynamic_cast<db_key*>(basemodel);
+		return dynamic_cast<db_sm9*>(basemodel);
 	}
 
   public:

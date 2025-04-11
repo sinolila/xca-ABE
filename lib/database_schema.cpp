@@ -180,6 +180,15 @@
 	"FOREIGN KEY (caId) REFERENCES items (id))"
 
 /*
+ * SM9 Keys - 专用于存储SM9密钥的表
+ */
+<< "CREATE TABLE sm9_keys ("
+	"item INTEGER, "                // reference to items(id)
+	"key_type INTEGER, "            // SM9_SIGN or SM9_ENCRYPT
+	"user_id VARCHAR(128), "        // User ID for the SM9 key
+	"FOREIGN KEY (item) REFERENCES items (id))"
+
+/*
  * Templates
  */
 << "CREATE TABLE templates ("
@@ -239,6 +248,10 @@
 	"name, private FROM private_keys JOIN items ON "
 	"items.id = private_keys.item"
 
+<< "CREATE VIEW view_sm9_keys AS SELECT "
+	"items.id, items.name, items.type, items.date, "
+	"sm9_keys.key_type, sm9_keys.user_id "
+	"FROM sm9_keys LEFT JOIN items ON sm9_keys.item = items.id"
 
 << "CREATE INDEX i_settings_key_ ON settings (key_)"
 << "CREATE INDEX i_items_id ON items (id)"

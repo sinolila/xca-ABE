@@ -150,7 +150,7 @@ class keyjob
 	
 	// SM9 相关参数
 	QString sm9Type;       // "sm9sign" 或 "sm9encrypt"
-	QString masterKeyPass; // 主密钥密码
+	QString idKeyPass;    // 用户密码
 	QString userId;        // 用户ID
 	
 	keyjob() {
