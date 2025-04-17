@@ -219,7 +219,8 @@ db_base *database_model::modelForPki(const pki_base *pki) const
 	if (dynamic_cast<const pki_crl*>(pki))
 		return model<db_crl>();
 	if (dynamic_cast<const pki_temp*>(pki))
-		return model<db_temp>();
+		return model<db_temp>();	
+
 	return NULL;
 }
 

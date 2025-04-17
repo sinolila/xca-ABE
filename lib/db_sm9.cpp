@@ -33,13 +33,9 @@ void db_sm9::loadContainer()
     XSqlQuery q;
 
     db_base::loadContainer();
-    foreach(pki_key *key, Store.getAll<pki_key>()) {
-        // 只加载SM9密钥
-        if (key->getKeyType() == EVP_PKEY_SM9_SIGN || 
-            key->getKeyType() == EVP_PKEY_SM9_ENC) {
-            key->setUcount(0);
-        }
-    }
+    foreach(pki_key *key, Store.getAll<pki_key>()) 
+        key->setUcount(0);
+
 
     SQL_PREPARE(q, "SELECT pkey, COUNT(*) FROM x509super WHERE pkey IS NOT NULL GROUP by pkey");
     q.exec();
@@ -49,11 +45,7 @@ void db_sm9::loadContainer()
             qDebug() << "Unknown key" << q.value(0).toULongLong();
             continue;
         }
-        // 只处理SM9密钥
-        if (key->getKeyType() == EVP_PKEY_SM9_SIGN || 
-            key->getKeyType() == EVP_PKEY_SM9_ENC) {
-            key->setUcount(q.value(1).toInt());
-        }
+        key->setUcount(q.value(1).toInt());
     }
     XCA_SQLERROR(q.lastError());
 }
@@ -99,11 +91,7 @@ void db_sm9::inToCont(pki_base *pki)
     db_base::inToCont(pki);
     pki_key *key = static_cast<pki_key*>(pki);
     
-    // 只处理SM9密钥
-    if (key->getKeyType() != EVP_PKEY_SM9_SIGN && 
-        key->getKeyType() != EVP_PKEY_SM9_ENC) {
-        return;
-    }
+
     
     unsigned hash = key->hash();
     QList<pki_x509super*> items = Store.sqlSELECTpki<pki_x509super>(
@@ -129,13 +117,6 @@ pki_base* db_sm9::insert(pki_base *item)
     pki_key *lkey = dynamic_cast<pki_key *>(item);
     pki_key *oldkey;
     pki_evp *evp = dynamic_cast<pki_evp*>(lkey);
-    
-    // 只处理SM9密钥
-    if (lkey && (lkey->getKeyType() != EVP_PKEY_SM9_SIGN && 
-                lkey->getKeyType() != EVP_PKEY_SM9_ENC)) {
-        qDebug() << "Ignoring non-SM9 key in db_sm9::insert";
-        return NULL;
-    }
 
     if (evp)
         evp->setOwnPass(pki_evp::ptCommon);
@@ -161,19 +142,23 @@ pki_base* db_sm9::insert(pki_base *item)
     return insertPKI(lkey);
 }
 
+QString getSM9TypeFromKeyType(const keytype &ktype) {
+    if (ktype.type == EVP_PKEY_SM9_SIGN)
+        return "sm9sign";
+    else if (ktype.type == EVP_PKEY_SM9_ENC)
+        return "sm9encrypt";
+    return QString();
+}
+
 pki_key *db_sm9::newSM9Key(const keyjob &job, const QString &name)
 {
     // 检查是否是SM9密钥
     if (!job.ktype.isSM9()) {
         XCA_WARN(tr("Not a SM9 key type"));
         return NULL;
-    }
-    
-    qDebug() << "Starting SM9 key generation with parameters:";
-    qDebug() << "  SM9 Type:" << job.sm9Type;
-    qDebug() << "  User ID:" << job.userId;
-    qDebug() << "  User Password:" << job.idKeyPass;
-    qDebug() << "  Name:" << name;
+    } 
+    //qDebug() << "Starting SM9 key generation with parameters:";
+
     pki_key *identkey = NULL;
     
     // 创建job的非const副本，以便可以修改
@@ -206,7 +191,7 @@ pki_key *db_sm9::newSM9Key(const keyjob &job, const QString &name)
     
     searchPaths << appDir + "/misc/sm9keygen.sh"               // 应用程序目录下的misc
                << appDir + "/../misc/sm9keygen.sh"             // 上级目录的misc
-               << appDir + "/../share/xca/misc/sm9keygen.sh"   // 标准安装位置
+              // << appDir + "/../share/xca/misc/sm9keygen.sh"   // 标准安装位置
                << appDir + "/../xca-ABE/misc/sm9keygen.sh"     // 项目目录下的misc
                << "/usr/share/xca/misc/sm9keygen.sh"           // Linux系统标准位置
                << "/usr/local/share/xca/misc/sm9keygen.sh"     // Linux本地安装位置
@@ -257,23 +242,6 @@ pki_key *db_sm9::newSM9Key(const keyjob &job, const QString &name)
             // 构建脚本参数 - 按照sm9keygen.sh脚本格式
             QStringList args;
             
-            // 添加参数（位置参数格式：<alg> <user_id> <outpass>）
-            qDebug() << "Setting SM9 type parameter:" << jobCopy.sm9Type;
-            
-            // 确保sm9Type值符合脚本要求
-            if (jobCopy.sm9Type != "sm9sign" && jobCopy.sm9Type != "sm9encrypt") {
-                qDebug() << "Invalid SM9 type:" << jobCopy.sm9Type << ", trying to derive from key type";
-                if (jobCopy.ktype.type == EVP_PKEY_SM9_SIGN) {
-                    jobCopy.sm9Type = "sm9sign";
-                } else if (jobCopy.ktype.type == EVP_PKEY_SM9_ENC) {
-                    jobCopy.sm9Type = "sm9encrypt";
-                } else {
-                    qDebug() << "Unable to determine valid SM9 type from key type:" << jobCopy.ktype.type;
-                    QMessageBox::warning(NULL, XCA_TITLE, tr("Invalid SM9 type"));
-                    return NULL;
-                }
-                qDebug() << "Derived SM9 type:" << jobCopy.sm9Type;
-            }
             
             args << jobCopy.sm9Type;
             
@@ -371,81 +339,24 @@ pki_key *db_sm9::newSM9Key(const keyjob &job, const QString &name)
                 }
             }
             
-            // 如果没有找到或复制文件
-            if (!fileCopied) {
-                qDebug() << "Generated file not found in any expected location";
-                qDebug() << "Current directory:" << QDir::currentPath();
-                qDebug() << "Files in current directory:" << QDir::current().entryList(QDir::Files);
-                
-                // 尝试在脚本执行目录查找文件
-                QString appDir = QCoreApplication::applicationDirPath();
-                qDebug() << "Application directory:" << appDir;
-                qDebug() << "Files in application directory:" 
-                        << QDir(appDir).entryList(QDir::Files);
-            }
-            
+
             // 检查文件是否存在
             if (!QFile::exists(userKeyPath)) {
-                qDebug() << "Error: User key file not found: " << userKeyPath;
-                qDebug() << "Files in temp directory:" << QDir(tempDir).entryList(QDir::Files);
-                
+         
                 QMessageBox::warning(NULL, XCA_TITLE, 
                     tr("Generated key file not found"));
                 QDir(tempDir).removeRecursively();
                 return NULL;
             }
-            qDebug() << "SM9 key generation successful";
+
             
-            // 将生成的密钥文件导入到数据库
-            try {
-                qDebug() << "Importing key from:" << userKeyPath;
-                
-                // 导入用户密钥
-                BIO *bio_user = BIO_new_file(userKeyPath.toUtf8().constData(), "r");
-                if (!bio_user) {
-                    qDebug() << "Error: Cannot open user key file";
-                    QMessageBox::warning(NULL, XCA_TITLE, tr("Cannot open user key file"));
-                    QDir(tempDir).removeRecursively();
-                    delete identkey;
-                    return NULL;
-                }
-                
-                // 将密钥内容导入到刚创建的pki_evp对象中
-                identkey->fromPEM_BIO(bio_user, jobCopy.idKeyPass.toUtf8().constData());
-                BIO_free(bio_user);
-                
-                // 设置密钥类型和来源属性
-                identkey->pkiSource = generated;
-                
-                if (identkey->getIntName().isEmpty())
-                    identkey->autoIntName(name);
-                
-                // 插入到数据库
-                identkey = dynamic_cast<pki_key*>(insert(identkey));
-                
-                // 删除临时文件
-                QDir(tempDir).removeRecursively();
-                
-                // 通知密钥生成完成
-                if (identkey) {
-                    qDebug() << "SM9 key successfully imported into database";
-                    emit keyDone(identkey);
-                    createSuccess(identkey);
-                }
-            } catch (errorEx &err) {
-                qDebug() << "Error: Failed to import generated key:" << err.getString();
-                QMessageBox::warning(NULL, XCA_TITLE, 
-                               tr("Failed to import generated key: %1").arg(err.getString()));
-                QDir(tempDir).removeRecursively();
-                delete identkey;
-                identkey = NULL;
-            }
 
     } catch (errorEx &err) {
         delete identkey;
         identkey = NULL;
         XCA_ERROR(err);
     }
+    createSuccess(identkey);
     return identkey;
 }
 

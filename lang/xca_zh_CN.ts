@@ -5693,4 +5693,24 @@ It is stored in the XCA database &apos;%3&apos;</source>
         <translation>复制到剪贴板</translation>
     </message>
 </context>
+<context>
+    <name>db_sm9</name>
+    <message>
+        <source>Type</source>
+        <translation>类型</translation>
+    </message>
+    <message>
+        <source>Size</source>
+        <translation>长度</translation>
+    </message>
+    <message>
+        <source>Use</source>
+        <translation>用途</translation>
+    </message>
+    <message>
+        <source>Password</source>
+        <translation>密码</translation>
+    </message>
+</context>
 </TS>
+

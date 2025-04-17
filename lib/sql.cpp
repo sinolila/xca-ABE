@@ -127,8 +127,8 @@ QString XSqlQuery::rewriteQuery(QString _q)
 		"authority" , "revocations" , "requests" , "x509super" ,
 		"settings" , "takeys", "sm9_keys",
 
-		"view_public_keys" , "view_certs" , "view_requests" ,
-		"view_crls" , "view_templates" , "view_private", "view_sm9_keys",
+		"view_sm9_keys","view_public_keys" , "view_certs" , "view_requests" ,
+		"view_crls" , "view_templates" , "view_private", 
 	};
 
 	lastq = query = _q;
